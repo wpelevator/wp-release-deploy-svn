@@ -2,7 +2,7 @@
 
 GitHub Action that deploys a WordPress plugin to the WordPress.org plugin SVN repository using [`@wpelevator/wp-release`](../../js/wp-release). It's named after the [`wp-release deploy-svn`](../../js/wp-release#deploy-to-svn) command that it runs.
 
-**Status:** unreleased. Deploys are implemented and tested against a local SVN repository in CI, but the action hasn't been published or used for a WordPress.org deploy yet. Boolean inputs must be `true` or `false`; anything else fails the run.
+**Status:** first release (0.x). Deploys are implemented and tested against local SVN repositories, but the action hasn't been used for a WordPress.org deploy yet, so try it with `dry-run: true` first. Boolean inputs must be `true` or `false`; anything else fails the run.
 
 Input names follow the CLI flags of [`wp-release deploy-svn`](../../js/wp-release#deploy-to-svn), and the `SVN_USERNAME`/`SVN_PASSWORD` secrets match the 10up WordPress.org actions. See [Compared with the 10up actions](#compared-with-the-10up-actions) for the differences and how to migrate.
 
@@ -26,7 +26,7 @@ jobs:
 
       # Stable releases: sync the build to trunk, tag it and update the assets.
       - if: github.event_name == 'release' && ! github.event.release.prerelease
-        uses: wpelevator/wp-release-deploy-svn@v1
+        uses: wpelevator/wp-release-deploy-svn@0.1.0
         with:
           source-dir: dist
           trunk: true
@@ -38,7 +38,7 @@ jobs:
 
       # Main branch pushes: update the readme and assets between releases.
       - if: github.event_name == 'push'
-        uses: wpelevator/wp-release-deploy-svn@v1
+        uses: wpelevator/wp-release-deploy-svn@0.1.0
         with:
           source-dir: dist
           readme-only: true
