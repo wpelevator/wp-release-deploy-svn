@@ -87,13 +87,13 @@ const cases: Array< {
 		},
 	},
 	{
-		name: 'a readme-only dry run with file selection',
+		name: 'a trunk dry run with file selection',
 		cli: [
 			'--source-dir',
 			'dist',
 			'--slug',
 			'my-plugin',
-			'--readme-only',
+			'--trunk',
 			'--readme',
 			'readme.md',
 			'--no-distignore',
@@ -104,7 +104,7 @@ const cases: Array< {
 		action: {
 			INPUT_SLUG: 'my-plugin',
 			'INPUT_SOURCE-DIR': 'dist',
-			'INPUT_README-ONLY': 'true',
+			INPUT_TRUNK: 'true',
 			INPUT_README: 'readme.md',
 			INPUT_DISTIGNORE: 'false',
 			INPUT_EXCLUDE: 'build/,tests/',

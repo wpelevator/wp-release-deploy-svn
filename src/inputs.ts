@@ -1,4 +1,4 @@
-import { getBooleanInput, getInput } from '@actions/core';
+import { getBooleanInput, getInput, setSecret } from '@actions/core';
 import type { DeployInput } from '@wpelevator/wp-release';
 
 /**
@@ -22,6 +22,11 @@ export function getOptionalBooleanInput( name: string ): boolean | undefined {
 export function getDeployInput(): DeployInput {
 	const input = ( name: string ) => getInput( name ) || undefined;
 	const distignore = input( 'distignore' );
+	const svnPassword = input( 'svn-password' );
+
+	if ( svnPassword ) {
+		setSecret( svnPassword );
+	}
 
 	return {
 		cwd: process.env.GITHUB_WORKSPACE || process.cwd(),
@@ -29,9 +34,7 @@ export function getDeployInput(): DeployInput {
 		slug: input( 'slug' ),
 		version: input( 'version' ),
 		trunk: getOptionalBooleanInput( 'trunk' ),
-		readmeOnly: getOptionalBooleanInput( 'readme-only' ),
 		svnTag: input( 'svn-tag' ),
-		gitRef: process.env.GITHUB_REF,
 		assets: getOptionalBooleanInput( 'assets' ),
 		assetsDir: input( 'assets-dir' ),
 		readme: input( 'readme' ),
@@ -39,6 +42,8 @@ export function getDeployInput(): DeployInput {
 		distignore: 'false' === distignore ? false : distignore,
 		exclude: input( 'exclude' ),
 		svnUrl: input( 'svn-url' ),
+		svnUsername: input( 'svn-username' ),
+		svnPassword,
 		message: input( 'message' ),
 		force: getOptionalBooleanInput( 'force' ),
 		dryRun: getOptionalBooleanInput( 'dry-run' ),

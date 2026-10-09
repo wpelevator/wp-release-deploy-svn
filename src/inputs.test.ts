@@ -7,7 +7,7 @@ test( 'reads write flags from inputs', () => {
 	const input = withEnv(
 		{
 			INPUT_TRUNK: 'true',
-			'INPUT_README-ONLY': 'false',
+			INPUT_ASSETS: 'false',
 			'INPUT_SVN-TAG': 'v1.2.0',
 		},
 		getDeployInput
@@ -15,14 +15,37 @@ test( 'reads write flags from inputs', () => {
 
 	assert.equal( input.trunk, true, 'The trunk input should be a boolean.' );
 	assert.equal(
-		input.readmeOnly,
+		input.assets,
 		false,
-		'The readme-only input should map to readmeOnly.'
+		'The assets input should be a boolean.'
 	);
 	assert.equal(
 		input.svnTag,
 		'v1.2.0',
 		'The svn-tag input should be passed through for wp-release to normalize.'
+	);
+} );
+
+test( 'reads the SVN credentials from inputs', () => {
+	const input = withEnv(
+		{ 'INPUT_SVN-USERNAME': 'me', 'INPUT_SVN-PASSWORD': 's3cret' },
+		getDeployInput
+	);
+
+	assert.equal(
+		input.svnUsername,
+		'me',
+		'The svn-username input should map to svnUsername.'
+	);
+	assert.equal(
+		input.svnPassword,
+		's3cret',
+		'The svn-password input should map to svnPassword.'
+	);
+	assert.equal(
+		withEnv( {}, getDeployInput ).svnPassword,
+		undefined,
+		'An empty password input should leave the SVN_PASSWORD env var in charge.'
 	);
 } );
 

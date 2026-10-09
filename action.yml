@@ -18,14 +18,11 @@ inputs:
   trunk:
     description: 'Sync the full source directory to trunk/.'
     default: 'false'
-  readme-only:
-    description: 'Sync only the readme to trunk/. Not allowed with trunk or when running for a git tag.'
-    default: 'false'
   assets:
     description: 'Set to false to skip syncing assets-dir for this run. Assets are synced whenever assets-dir is set.'
     default: ''
   svn-tag:
-    description: 'Version to copy from trunk/ to tags/<version>, requires trunk. A leading "v" is stripped. Empty disables tagging.'
+    description: 'Version to copy from trunk/ to tags/<version>; without trunk it copies the current trunk/ in the repository. A leading "v" is stripped. Empty disables tagging.'
     default: ''
   assets-dir:
     description: 'Directory with the banners, icons and screenshots to sync to the SVN assets/ directory. Assets are not deployed unless this is set.'
@@ -44,6 +41,12 @@ inputs:
     default: ''
   svn-url:
     description: 'SVN repository URL with a {slug} placeholder. Defaults to https://plugins.svn.wordpress.org/{slug}/.'
+    default: ''
+  svn-username:
+    description: 'WordPress.org SVN username, only needed for the commit. Defaults to the SVN_USERNAME environment variable.'
+    default: ''
+  svn-password:
+    description: 'WordPress.org SVN password, only needed for the commit. Defaults to the SVN_PASSWORD environment variable.'
     default: ''
   message:
     description: 'SVN commit message.'
