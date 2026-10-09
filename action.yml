@@ -1,0 +1,70 @@
+name: 'WordPress.org SVN Deploy'
+description: 'Deploy a WordPress plugin to the WordPress.org plugin SVN repository.'
+author: 'WP Elevator'
+branding:
+  icon: 'upload-cloud'
+  color: 'blue'
+
+inputs:
+  source-dir:
+    description: 'Directory with the plugin files to deploy. Defaults to the repository root.'
+    default: ''
+  slug:
+    description: 'WordPress.org slug.'
+    default: ${{ github.event.repository.name }}
+  version:
+    description: 'Version to check against the headers. Defaults to svn-tag, then to the Version header of the deployed files.'
+    default: ''
+  trunk:
+    description: 'Sync the full source directory to trunk/.'
+    default: 'false'
+  readme-only:
+    description: 'Sync only the readme to trunk/. Not allowed with trunk or when running for a git tag.'
+    default: 'false'
+  assets:
+    description: 'Set to false to skip syncing assets-dir for this run. Assets are synced whenever assets-dir is set.'
+    default: ''
+  svn-tag:
+    description: 'Version to copy from trunk/ to tags/<version>, requires trunk. A leading "v" is stripped. Empty disables tagging.'
+    default: ''
+  assets-dir:
+    description: 'Directory with the banners, icons and screenshots to sync to the SVN assets/ directory. Assets are not deployed unless this is set.'
+    default: ''
+  readme:
+    description: 'Readme file name.'
+    default: 'readme.txt'
+  from-zip:
+    description: 'Deploy the contents of this ZIP file, with a {slug}/ root folder, instead of source-dir.'
+    default: ''
+  distignore:
+    description: 'Path to the ignore file, or "false" to not read one. Defaults to .distignore in source-dir when present.'
+    default: ''
+  exclude:
+    description: 'Extra gitignore-style patterns to leave out, separated by commas or new lines, like "build/,assets/*,images/**/*".'
+    default: ''
+  svn-url:
+    description: 'SVN repository URL with a {slug} placeholder. Defaults to https://plugins.svn.wordpress.org/{slug}/.'
+    default: ''
+  message:
+    description: 'SVN commit message.'
+    default: ''
+  force:
+    description: 'Replace an existing SVN tag of the same version.'
+    default: 'false'
+  dry-run:
+    description: 'Run every step except the SVN commit. SVN credentials are not required.'
+    default: 'false'
+
+outputs:
+  slug:
+    description: 'Resolved WordPress.org slug.'
+  version:
+    description: 'Deployed version, empty when unknown, like for assets-only deploys.'
+  committed:
+    description: 'Whether a commit was made.'
+  revision:
+    description: 'SVN revision of the commit, empty when nothing was committed.'
+
+runs:
+  using: 'node24'
+  main: 'dist/index.js'
