@@ -1,4 +1,4 @@
-name: 'WordPress.org SVN Deploy'
+name: 'WP Release Deploy SVN'
 description: 'Deploy a WordPress plugin to the WordPress.org plugin SVN repository.'
 author: 'WP Elevator'
 branding:

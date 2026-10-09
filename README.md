@@ -1,10 +1,12 @@
-# Deploy to WordPress.org SVN
+# WP Release Deploy SVN
 
-GitHub Action that deploys a WordPress plugin to the WordPress.org plugin SVN repository using [`@wpelevator/wp-release`](../../js/wp-release). It's named after the [`wp-release deploy-svn`](../../js/wp-release#deploy-to-svn) command that it runs.
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-WP%20Release%20Deploy%20SVN-blue?logo=github)](https://github.com/marketplace/actions/wp-release-deploy-svn) [![Latest release](https://img.shields.io/github/v/release/wpelevator/wp-release-deploy-svn?include_prereleases&sort=semver)](https://github.com/wpelevator/wp-release-deploy-svn/releases) [![npm](https://img.shields.io/npm/v/@wpelevator/wp-release?label=wp-release)](https://www.npmjs.com/package/@wpelevator/wp-release)
+
+GitHub Action that deploys a WordPress plugin to the WordPress.org plugin SVN repository using [`@wpelevator/wp-release`](https://www.npmjs.com/package/@wpelevator/wp-release). It's named after the [`wp-release deploy-svn`](https://www.npmjs.com/package/@wpelevator/wp-release#deploy-to-svn) command that it runs.
 
 **Status:** first release (0.x). Deploys are implemented and tested against local SVN repositories, but the action hasn't been used for a WordPress.org deploy yet, so try it with `dry-run: true` first. Boolean inputs must be `true` or `false`; anything else fails the run.
 
-Input names follow the CLI flags of [`wp-release deploy-svn`](../../js/wp-release#deploy-to-svn), and the `SVN_USERNAME`/`SVN_PASSWORD` secrets match the 10up WordPress.org actions. See [Compared with the 10up actions](#compared-with-the-10up-actions) for the differences and how to migrate.
+Input names follow the CLI flags of [`wp-release deploy-svn`](https://www.npmjs.com/package/@wpelevator/wp-release#deploy-to-svn), and the `SVN_USERNAME`/`SVN_PASSWORD` secrets match the 10up WordPress.org actions. See [Compared with the 10up actions](#compared-with-the-10up-actions) for the differences and how to migrate.
 
 ## Usage
 
@@ -26,7 +28,7 @@ jobs:
 
       # Stable releases: sync the build to trunk, tag it and update the assets.
       - if: github.event_name == 'release' && ! github.event.release.prerelease
-        uses: wpelevator/wp-release-deploy-svn@0.1.0
+        uses: wpelevator/wp-release-deploy-svn@0.1.1
         with:
           source-dir: dist
           trunk: true
@@ -38,7 +40,7 @@ jobs:
 
       # Main branch pushes: update the readme and assets between releases.
       - if: github.event_name == 'push'
-        uses: wpelevator/wp-release-deploy-svn@0.1.0
+        uses: wpelevator/wp-release-deploy-svn@0.1.1
         with:
           source-dir: dist
           readme-only: true
@@ -108,7 +110,7 @@ To migrate from `10up/action-wordpress-plugin-deploy`, move the env vars to inpu
 
 ## How it works
 
-[`src/run.ts`](src/run.ts) reads the inputs with [`@actions/core`](https://github.com/actions/toolkit/tree/main/packages/core), maps them to [`@wpelevator/wp-release`](../../js/wp-release) options, installs `svn` when needed and runs `SvnDeploy`, which logs the planned SVN changes and the SVN status in collapsible groups. GitHub-specific code stays in the action, so `wp-release` doesn't depend on the Actions toolkit. Contract tests check that the inputs, with the `action.yml` defaults, resolve to the same options as the matching `wp-release deploy-svn` flags.
+[`src/run.ts`](src/run.ts) reads the inputs with [`@actions/core`](https://github.com/actions/toolkit/tree/main/packages/core), maps them to [`@wpelevator/wp-release`](https://www.npmjs.com/package/@wpelevator/wp-release) options, installs `svn` when needed and runs `SvnDeploy`, which logs the planned SVN changes and the SVN status in collapsible groups. GitHub-specific code stays in the action, so `wp-release` doesn't depend on the Actions toolkit. Contract tests check that the inputs, with the `action.yml` defaults, resolve to the same options as the matching `wp-release deploy-svn` flags.
 
 The action runs `dist/index.js`, a single file bundled with esbuild that includes `wp-release` and all other dependencies, so nothing is installed from npm when the action runs. The tooling version is fixed by the action ref you pin.
 
@@ -128,4 +130,4 @@ Run the bundle locally with inputs as `INPUT_<NAME>` env vars:
 env INPUT_SLUG=example-plugin INPUT_SOURCE-DIR=dist INPUT_TRUNK=true INPUT_SVN-TAG=1.0.0 INPUT_DRY-RUN=true node packages/actions/wp-release-deploy-svn/dist/index.js
 ```
 
-The `Test GitHub Actions` workflow ([`test-github-actions.yml`](../../../.github/workflows/test-github-actions.yml)) builds the action and runs it from the monorepo with `uses: ./packages/actions/wp-release-deploy-svn` whenever the action, the JS packages or the lockfile change. It only checks that the bundled action loads and resolves its inputs, with a run that has nothing to write. SVN deploys are covered by the `wp-release` integration tests, which deploy to a local `svnadmin` repository when Subversion is installed. The unit tests, lint and build run in `Test and Build` with the rest of the monorepo.
+The `Test GitHub Actions` workflow (`.github/workflows/test-github-actions.yml` in the monorepo) builds the action and runs it from the monorepo with `uses: ./packages/actions/wp-release-deploy-svn` whenever the action, the JS packages or the lockfile change. It only checks that the bundled action loads and resolves its inputs, with a run that has nothing to write. SVN deploys are covered by the `wp-release` integration tests, which deploy to a local `svnadmin` repository when Subversion is installed. The unit tests, lint and build run in `Test and Build` with the rest of the monorepo.

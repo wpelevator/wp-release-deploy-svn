@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "@wpelevator/wp-release-deploy-svn-action",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "GitHub Action to deploy WordPress plugins and themes to WordPress.org SVN",
 	"license": "MIT",
 	"type": "module",
