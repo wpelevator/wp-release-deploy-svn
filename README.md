@@ -109,6 +109,17 @@ Credentials are passed either as the `svn-username` and `svn-password` inputs or
 
 To migrate from `10up/action-wordpress-plugin-deploy`, move the env vars to inputs (`SLUG` → `slug`, `BUILD_DIR` → `source-dir`, `ASSETS_DIR` → `assets-dir`, `VERSION` → `version`), set `assets-dir: .wordpress-org` to keep deploying the 10up default assets directory, and set `trunk: true` with `svn-tag` set to the version, since trunk and tag writes are off unless requested. To replace `10up/action-wordpress-plugin-asset-update`, use `readme-only: true` (with `README_NAME` → `readme`).
 
+## Without the action
+
+When you can't use a GitHub Action, such as on another CI system or from your own machine, add the same tooling as a development dependency and run the CLI command that the action runs. Pass the credentials in the `SVN_USERNAME` and `SVN_PASSWORD` environment variables and install the `svn` client first, which the CLI doesn't install for you:
+
+```bash
+npm install --save-dev @wpelevator/wp-release
+npx wp-release deploy-svn dist --trunk --svn-tag 1.2.0 --assets-dir .wordpress-org --dry-run
+```
+
+Remove `--dry-run` to commit. The inputs map to the flags of [`wp-release deploy-svn`](../../js/wp-release#deploy-to-svn): `source-dir` is the first argument, `trunk`, `readme-only`, `force` and `dry-run` are switches, and `slug`, `version`, `svn-tag`, `assets-dir`, `readme`, `from-zip`, `distignore`, `exclude`, `svn-url`, `svn-username` and `message` keep their names. `assets: false` is `--no-assets` and `distignore: false` is `--no-distignore`. Add `--json` to read the result from the output. The CLI needs Node.js 22.12 or later. Run `npx wp-release deploy-svn --help` for all options.
+
 ## How it works
 
 [`src/run.ts`](src/run.ts) reads the inputs with [`@actions/core`](https://github.com/actions/toolkit/tree/main/packages/core), maps them to [`@wpelevator/wp-release`](https://www.npmjs.com/package/@wpelevator/wp-release) options, installs `svn` when needed and runs `SvnDeploy`, which logs the planned SVN changes and the SVN status in collapsible groups. GitHub-specific code stays in the action, so `wp-release` doesn't depend on the Actions toolkit. Contract tests check that the inputs, with the `action.yml` defaults, resolve to the same options as the matching `wp-release deploy-svn` flags.
