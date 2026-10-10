@@ -28,7 +28,7 @@ jobs:
 
       # Stable releases: sync the build to trunk, tag it and update the assets.
       - if: github.event_name == 'release' && ! github.event.release.prerelease
-        uses: wpelevator/wp-release-deploy-svn@0.3.0
+        uses: wpelevator/wp-release-deploy-svn@0.4.0
         with:
           source-dir: dist
           trunk: true
@@ -39,7 +39,7 @@ jobs:
 
       # Main branch pushes: update the readme and assets between releases.
       - if: github.event_name == 'push'
-        uses: wpelevator/wp-release-deploy-svn@0.3.0
+        uses: wpelevator/wp-release-deploy-svn@0.4.0
         with:
           source-dir: dist
           readme-only: true
@@ -48,7 +48,7 @@ jobs:
           svn-password: ${{ secrets.SVN_PASSWORD }}
 ```
 
-Pre-releases don't run the action, so they never touch WordPress.org. A leading `v` in `svn-tag` is stripped, so a `v1.2.0` release creates `tags/1.2.0`.
+Pre-releases don't run the action in this example, so they never touch WordPress.org. To tag a pre-release build without changing trunk, run the action for them with `svn-tag` and without `trunk`. A leading `v` in `svn-tag` is stripped, so a `v1.2.0` release creates `tags/1.2.0`.
 
 The action runs on the GitHub Actions Node.js 24 runtime. Deploys need the `svn` client, which isn't preinstalled on `ubuntu-24.04` runners, so the action installs Subversion with `apt-get` on Linux runners when `svn` is missing. On other runners, install Subversion in an earlier step. Runs without writes don't need `svn`.
 
@@ -63,7 +63,7 @@ The action only deploys plugins. Themes are released by uploading a ZIP on WordP
 | `version` | `svn-tag`, then the `Version` header | Version to check against the headers. |
 | `trunk` | `false` | Sync the full build to `trunk/`. |
 | `readme-only` | `false` | Sync only the readme to `trunk/`. Can't be combined with `svn-tag`. |
-| `svn-tag` | | Version to copy from `trunk/` to `tags/<version>`. Without `trunk`, the tag is copied from the current `trunk/` in the repository. A leading `v` is stripped. Empty disables tagging. |
+| `svn-tag` | | Version to create as `tags/<version>`. With `trunk`, the tag is a copy of the synced `trunk/`. Without it, the tag is built from the source files and `trunk/` is left alone, for pre-release tags. A leading `v` is stripped. Empty disables tagging. |
 | `assets-dir` | | Directory with the banners, icons and screenshots to sync to the SVN `assets/` directory. Assets aren't deployed unless this is set, and the directory must exist. |
 | `assets` | | Set to `false` to skip the `assets-dir` sync for one run. |
 | `readme` | `readme.txt` | Readme file name. |
@@ -97,7 +97,7 @@ Credentials are passed either as the `svn-username` and `svn-password` inputs or
 | Releases and readme/asset updates | Two actions with separate configuration | One action with `trunk`, `readme-only`, `svn-tag` and `assets-dir` inputs |
 | Configuration | Env vars (`SLUG`, `VERSION`, `BUILD_DIR`, `ASSETS_DIR`, `README_NAME`) | `with:` inputs only; those env vars are ignored |
 | Trunk without a tag | Not possible, a deploy always tags | `trunk: true` without `svn-tag` (warns, since trunk then differs from the stable tag) |
-| Tag without a trunk sync | Not possible, a deploy always syncs trunk | `svn-tag` without `trunk`, which tags the current `trunk/` in the repository |
+| Tag without a trunk sync | Not possible, a deploy always syncs trunk | `svn-tag` without `trunk`, which builds the tag from the source files and leaves `trunk/` alone, with the `Version` header checked |
 | Readme-only updates | Separate asset-update action; copies only the readme and assets with `IGNORE_OTHER_FILES: true`, otherwise bails when other files differ from trunk | `readme-only: true` copies just the readme |
 | Version checks | None | `Version` header, readme `Stable tag` and SVN tag must agree before anything is written |
 | Pre-release versions | Deployed unless the workflow skips them | Versions like `1.0.0-rc.1` can be tagged, and syncing one to `trunk/` warns |

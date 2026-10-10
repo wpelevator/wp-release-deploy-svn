@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.4.0 (2026-10-10)
+
+- `svn-tag` without `trunk` now builds the tag from the source files instead of copying the repository's trunk, so a pre-release like `1.5.1-rc.1` can be tagged without touching trunk. The `Version` header must match the tag, and the readme `Stable tag` isn't checked. `trunk` with `svn-tag` still copies the synced trunk.
+
 ## 0.3.0 (2026-10-10)
 
 - Pre-release versions like `1.5.1-rc.1` can now be used as an `svn-tag`. Syncing a pre-release version to `trunk` still warns.
