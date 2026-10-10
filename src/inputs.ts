@@ -34,6 +34,7 @@ export function getDeployInput(): DeployInput {
 		slug: input( 'slug' ),
 		version: input( 'version' ),
 		trunk: getOptionalBooleanInput( 'trunk' ),
+		readmeOnly: getOptionalBooleanInput( 'readme-only' ),
 		svnTag: input( 'svn-tag' ),
 		assets: getOptionalBooleanInput( 'assets' ),
 		assetsDir: input( 'assets-dir' ),

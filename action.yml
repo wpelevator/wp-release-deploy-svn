@@ -18,6 +18,9 @@ inputs:
   trunk:
     description: 'Sync the full source directory to trunk/.'
     default: 'false'
+  readme-only:
+    description: 'Sync only the readme to trunk/. Not allowed with svn-tag.'
+    default: 'false'
   assets:
     description: 'Set to false to skip syncing assets-dir for this run. Assets are synced whenever assets-dir is set.'
     default: ''

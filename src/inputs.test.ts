@@ -7,7 +7,7 @@ test( 'reads write flags from inputs', () => {
 	const input = withEnv(
 		{
 			INPUT_TRUNK: 'true',
-			INPUT_ASSETS: 'false',
+			'INPUT_README-ONLY': 'false',
 			'INPUT_SVN-TAG': 'v1.2.0',
 		},
 		getDeployInput
@@ -15,9 +15,9 @@ test( 'reads write flags from inputs', () => {
 
 	assert.equal( input.trunk, true, 'The trunk input should be a boolean.' );
 	assert.equal(
-		input.assets,
+		input.readmeOnly,
 		false,
-		'The assets input should be a boolean.'
+		'The readme-only input should map to readmeOnly.'
 	);
 	assert.equal(
 		input.svnTag,

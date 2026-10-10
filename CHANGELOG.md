@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.3.0 (2026-10-10)
+
+- Pre-release versions like `1.5.1-rc.1` can now be used as an `svn-tag`. Syncing a pre-release version to `trunk` still warns.
+- Restored the `readme-only` input, which 0.2.0 removed. It syncs only the readme to `trunk/` for updates between releases, and can't be combined with `svn-tag`.
+
 ## 0.2.0 (2026-10-09)
 
 - `svn-tag` no longer requires `trunk`. Without `trunk`, the tag is copied from the current `trunk/` in the repository.

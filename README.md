@@ -28,7 +28,7 @@ jobs:
 
       # Stable releases: sync the build to trunk, tag it and update the assets.
       - if: github.event_name == 'release' && ! github.event.release.prerelease
-        uses: wpelevator/wp-release-deploy-svn@0.2.0
+        uses: wpelevator/wp-release-deploy-svn@0.3.0
         with:
           source-dir: dist
           trunk: true
@@ -37,11 +37,12 @@ jobs:
           svn-username: ${{ secrets.SVN_USERNAME }}
           svn-password: ${{ secrets.SVN_PASSWORD }}
 
-      # Main branch pushes: update only the assets between releases.
+      # Main branch pushes: update the readme and assets between releases.
       - if: github.event_name == 'push'
-        uses: wpelevator/wp-release-deploy-svn@0.2.0
+        uses: wpelevator/wp-release-deploy-svn@0.3.0
         with:
           source-dir: dist
+          readme-only: true
           assets-dir: .wordpress-org
           svn-username: ${{ secrets.SVN_USERNAME }}
           svn-password: ${{ secrets.SVN_PASSWORD }}
@@ -61,6 +62,7 @@ The action only deploys plugins. Themes are released by uploading a ZIP on WordP
 | `slug` | repository name | WordPress.org plugin slug. |
 | `version` | `svn-tag`, then the `Version` header | Version to check against the headers. |
 | `trunk` | `false` | Sync the full build to `trunk/`. |
+| `readme-only` | `false` | Sync only the readme to `trunk/`. Can't be combined with `svn-tag`. |
 | `svn-tag` | | Version to copy from `trunk/` to `tags/<version>`. Without `trunk`, the tag is copied from the current `trunk/` in the repository. A leading `v` is stripped. Empty disables tagging. |
 | `assets-dir` | | Directory with the banners, icons and screenshots to sync to the SVN `assets/` directory. Assets aren't deployed unless this is set, and the directory must exist. |
 | `assets` | | Set to `false` to skip the `assets-dir` sync for one run. |
@@ -92,20 +94,20 @@ Credentials are passed either as the `svn-username` and `svn-password` inputs or
 
 | | 10up actions | This action |
 |---|---|---|
-| Releases and readme/asset updates | Two actions with separate configuration | One action with `trunk`, `svn-tag` and `assets-dir` inputs |
+| Releases and readme/asset updates | Two actions with separate configuration | One action with `trunk`, `readme-only`, `svn-tag` and `assets-dir` inputs |
 | Configuration | Env vars (`SLUG`, `VERSION`, `BUILD_DIR`, `ASSETS_DIR`, `README_NAME`) | `with:` inputs only; those env vars are ignored |
 | Trunk without a tag | Not possible, a deploy always tags | `trunk: true` without `svn-tag` (warns, since trunk then differs from the stable tag) |
 | Tag without a trunk sync | Not possible, a deploy always syncs trunk | `svn-tag` without `trunk`, which tags the current `trunk/` in the repository |
-| Readme-only updates | Separate asset-update action; copies only the readme and assets with `IGNORE_OTHER_FILES: true`, otherwise bails when other files differ from trunk | Not supported: `trunk` syncs the whole build, and `assets-dir` without `trunk` syncs only the assets |
+| Readme-only updates | Separate asset-update action; copies only the readme and assets with `IGNORE_OTHER_FILES: true`, otherwise bails when other files differ from trunk | `readme-only: true` copies just the readme |
 | Version checks | None | `Version` header, readme `Stable tag` and SVN tag must agree before anything is written |
-| Pre-release versions | Deployed unless the workflow skips them | `svn-tag` rejects versions like `1.0.0-rc.1` |
+| Pre-release versions | Deployed unless the workflow skips them | Versions like `1.0.0-rc.1` can be tagged, and syncing one to `trunk/` warns |
 | Release ZIP | `generate-zip` input builds one from SVN trunk | Not part of the deploy; build the ZIP with `wp-release zip` in a separate step and pass it as `from-zip` to deploy exactly the released files |
 | Assets directory | `.wordpress-org`, synced whenever it exists | Synced only when `assets-dir` is set, and a missing directory is an error |
 | File selection | `.distignore` or `.gitattributes` `export-ignore`, ignored when `BUILD_DIR` is set | `.distignore` (or another file via `distignore`) plus `exclude` patterns, also applied to `source-dir` |
 | Asset MIME types | PNG, JPEG, GIF and SVG | The same formats |
 | Runtime | Bash with `rsync` and `svn` on Linux runners | Bundled Node.js without `rsync`; installs `svn` on Linux runners |
 
-To migrate from `10up/action-wordpress-plugin-deploy`, move the env vars to inputs (`SLUG` → `slug`, `BUILD_DIR` → `source-dir`, `ASSETS_DIR` → `assets-dir`, `VERSION` → `version`), set `assets-dir: .wordpress-org` to keep deploying the 10up default assets directory, and set `trunk: true` with `svn-tag` set to the version, since trunk and tag writes are off unless requested. To replace `10up/action-wordpress-plugin-asset-update`, use `assets-dir` without `trunk`, which updates only the assets; readme changes are deployed with a `trunk` sync.
+To migrate from `10up/action-wordpress-plugin-deploy`, move the env vars to inputs (`SLUG` → `slug`, `BUILD_DIR` → `source-dir`, `ASSETS_DIR` → `assets-dir`, `VERSION` → `version`), set `assets-dir: .wordpress-org` to keep deploying the 10up default assets directory, and set `trunk: true` with `svn-tag` set to the version, since trunk and tag writes are off unless requested. To replace `10up/action-wordpress-plugin-asset-update`, use `readme-only: true` (with `README_NAME` → `readme`).
 
 ## How it works
 
