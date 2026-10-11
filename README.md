@@ -8,6 +8,8 @@ GitHub Action that deploys a WordPress plugin to the WordPress.org plugin SVN re
 
 Input names follow the CLI flags of [`wp-release deploy-svn`](https://www.npmjs.com/package/@wpelevator/wp-release#deploy-to-svn), and the `SVN_USERNAME`/`SVN_PASSWORD` secrets match the 10up WordPress.org actions. See [Compared with the 10up actions](#compared-with-the-10up-actions) for the differences and how to migrate.
 
+It's built on current GitHub Actions features, so problems show up where you look for them instead of only in the log: a version mismatch is an [annotation](#annotations-and-job-summary) on the exact file and line, and every deploy writes a job summary with the version, the commit and the SVN changes.
+
 ## Usage
 
 ```yaml
@@ -28,7 +30,7 @@ jobs:
 
       # Stable releases: sync the build to trunk, tag it and update the assets.
       - if: github.event_name == 'release' && ! github.event.release.prerelease
-        uses: wpelevator/wp-release-deploy-svn@0.4.0
+        uses: wpelevator/wp-release-deploy-svn@0.5.0
         with:
           source-dir: dist
           trunk: true
@@ -39,7 +41,7 @@ jobs:
 
       # Main branch pushes: update the readme and assets between releases.
       - if: github.event_name == 'push'
-        uses: wpelevator/wp-release-deploy-svn@0.4.0
+        uses: wpelevator/wp-release-deploy-svn@0.5.0
         with:
           source-dir: dist
           readme-only: true
@@ -88,6 +90,27 @@ Credentials are passed either as the `svn-username` and `svn-password` inputs or
 | `committed` | Whether a commit was made. |
 | `revision` | SVN revision of the commit, empty when nothing was committed. |
 
+## Annotations and job summary
+
+When the `Version` header, the readme `Stable tag` and `svn-tag` don't agree, the run fails before anything is written, with an annotation on the file and line of each version that doesn't match. They show up on the run and on the files of a pull request, so you see which line to change without reading the log. The action prints them as workflow commands like:
+
+```
+::error file=build/my-plugin.php,line=4,title=Version mismatch::Version header in my-plugin.php is 1.2.0, expected 1.3.0.
+::error file=build/readme.txt,line=2,title=Version mismatch::Stable tag in readme.txt is 1.2.0, expected 1.3.0.
+```
+
+Files outside the workspace, like the extracted files of `from-zip`, get an annotation without a file.
+
+Each deploy also adds a section to the job summary of the run:
+
+- **Plugin**, linked to its WordPress.org page.
+- **Version** that was deployed.
+- **Writes**: the SVN paths that the inputs write to, like `trunk/`, `tags/1.2.0/` and `assets/`.
+- **Result**: the revision, linked to its WordPress.org changeset, or that it was a dry run or had no changes.
+- **SVN changes** in a collapsed table, so a dry run shows exactly what a deploy would commit.
+
+A failed run adds the version mismatches, with their files and lines, or the error to the summary.
+
 ## Compared with the 10up actions
 
 [`10up/action-wordpress-plugin-deploy`](https://github.com/10up/action-wordpress-plugin-deploy) and [`10up/action-wordpress-plugin-asset-update`](https://github.com/10up/action-wordpress-plugin-asset-update) are the most widely used WordPress.org deploy actions. This action covers both:
@@ -122,7 +145,7 @@ Remove `--dry-run` to commit. The inputs map to the flags of [`wp-release deploy
 
 ## How it works
 
-[`src/run.ts`](src/run.ts) reads the inputs with [`@actions/core`](https://github.com/actions/toolkit/tree/main/packages/core), maps them to [`@wpelevator/wp-release`](https://www.npmjs.com/package/@wpelevator/wp-release) options, installs `svn` when needed and runs `SvnDeploy`, which logs the planned SVN changes and the SVN status in collapsible groups. GitHub-specific code stays in the action, so `wp-release` doesn't depend on the Actions toolkit. Contract tests check that the inputs, with the `action.yml` defaults, resolve to the same options as the matching `wp-release deploy-svn` flags.
+[`src/run.ts`](src/run.ts) reads the inputs with [`@actions/core`](https://github.com/actions/toolkit/tree/main/packages/core), maps them to [`@wpelevator/wp-release`](https://www.npmjs.com/package/@wpelevator/wp-release) options, installs `svn` when needed and runs `SvnDeploy`, which logs the planned SVN changes and the SVN status in collapsible groups. The action passes the `GitHubActionsWriter` of `wp-release` to its logger, so version mismatches fail the run with an annotation on the file and line of each version that doesn't match, and the deploy writes the [job summary](#annotations-and-job-summary). GitHub-specific code stays in the action, so `wp-release` doesn't depend on the Actions toolkit. Contract tests check that the inputs, with the `action.yml` defaults, resolve to the same options as the matching `wp-release deploy-svn` flags.
 
 The action runs `dist/index.js`, a single file bundled with esbuild that includes `wp-release` and all other dependencies, so nothing is installed from npm when the action runs. The tooling version is fixed by the action ref you pin.
 

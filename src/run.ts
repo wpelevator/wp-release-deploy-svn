@@ -1,13 +1,15 @@
-import { info, setFailed, setOutput } from '@actions/core';
+import { info, setOutput } from '@actions/core';
 import {
+	GitHubActionsWriter,
 	Logger,
 	SvnDeploy,
+	logError,
 	resolveDeployOptions,
 } from '@wpelevator/wp-release';
 import { getDeployInput } from './inputs.ts';
 import { installSvn } from './install-svn.ts';
 
-const logger = new Logger( { ci: true } );
+const logger = new Logger( { writer: new GitHubActionsWriter() } );
 
 try {
 	const options = resolveDeployOptions( getDeployInput() );
@@ -29,5 +31,7 @@ try {
 	setOutput( 'committed', result.committed );
 	setOutput( 'revision', result.revision ?? '' );
 } catch ( error ) {
-	setFailed( error instanceof Error ? error.message : String( error ) );
+	// Logs each version mismatch as an annotation on its file and line.
+	logError( logger, error, 'WP Release Deploy SVN' );
+	process.exitCode = 1;
 }
