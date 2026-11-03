@@ -2148,9 +2148,9 @@ var require_dispatcher_base = __commonJS({
       }
       close(callback) {
         if (callback === void 0) {
-          return new Promise((resolve22, reject) => {
+          return new Promise((resolve24, reject) => {
             this.close((err, data) => {
-              return err ? reject(err) : resolve22(data);
+              return err ? reject(err) : resolve24(data);
             });
           });
         }
@@ -2188,12 +2188,12 @@ var require_dispatcher_base = __commonJS({
           err = null;
         }
         if (callback === void 0) {
-          return new Promise((resolve22, reject) => {
+          return new Promise((resolve24, reject) => {
             this.destroy(err, (err2, data) => {
               return err2 ? (
                 /* istanbul ignore next: should never error */
                 reject(err2)
-              ) : resolve22(data);
+              ) : resolve24(data);
             });
           });
         }
@@ -4460,8 +4460,8 @@ var require_util2 = __commonJS({
     function createDeferredPromise() {
       let res;
       let rej;
-      const promise = new Promise((resolve22, reject) => {
-        res = resolve22;
+      const promise = new Promise((resolve24, reject) => {
+        res = resolve24;
         rej = reject;
       });
       return { promise, resolve: res, reject: rej };
@@ -6713,12 +6713,12 @@ upgrade: ${upgrade}\r
           cb();
         }
       }
-      const waitForDrain = () => new Promise((resolve22, reject) => {
+      const waitForDrain = () => new Promise((resolve24, reject) => {
         assert(callback === null);
         if (socket[kError]) {
           reject(socket[kError]);
         } else {
-          callback = resolve22;
+          callback = resolve24;
         }
       });
       socket.on("close", onDrain).on("drain", onDrain);
@@ -7390,12 +7390,12 @@ var require_client_h2 = __commonJS({
           cb();
         }
       }
-      const waitForDrain = () => new Promise((resolve22, reject) => {
+      const waitForDrain = () => new Promise((resolve24, reject) => {
         assert(callback === null);
         if (socket[kError]) {
           reject(socket[kError]);
         } else {
-          callback = resolve22;
+          callback = resolve24;
         }
       });
       h2stream.on("close", onDrain).on("drain", onDrain);
@@ -7873,16 +7873,16 @@ var require_client = __commonJS({
         return this[kNeedDrain] < 2;
       }
       async [kClose]() {
-        return new Promise((resolve22) => {
+        return new Promise((resolve24) => {
           if (this[kSize]) {
-            this[kClosedResolve] = resolve22;
+            this[kClosedResolve] = resolve24;
           } else {
-            resolve22(null);
+            resolve24(null);
           }
         });
       }
       async [kDestroy](err) {
-        return new Promise((resolve22) => {
+        return new Promise((resolve24) => {
           const requests = this[kQueue].splice(this[kPendingIdx]);
           for (let i = 0; i < requests.length; i++) {
             const request = requests[i];
@@ -7893,7 +7893,7 @@ var require_client = __commonJS({
               this[kClosedResolve]();
               this[kClosedResolve] = null;
             }
-            resolve22(null);
+            resolve24(null);
           };
           if (this[kHTTPContext]) {
             this[kHTTPContext].destroy(err, callback);
@@ -7944,7 +7944,7 @@ var require_client = __commonJS({
         });
       }
       try {
-        const socket = await new Promise((resolve22, reject) => {
+        const socket = await new Promise((resolve24, reject) => {
           client[kConnector]({
             host,
             hostname,
@@ -7956,7 +7956,7 @@ var require_client = __commonJS({
             if (err) {
               reject(err);
             } else {
-              resolve22(socket2);
+              resolve24(socket2);
             }
           });
         });
@@ -8292,8 +8292,8 @@ var require_pool_base = __commonJS({
         if (this[kQueue].isEmpty()) {
           await Promise.all(this[kClients].map((c) => c.close()));
         } else {
-          await new Promise((resolve22) => {
-            this[kClosedResolve] = resolve22;
+          await new Promise((resolve24) => {
+            this[kClosedResolve] = resolve24;
           });
         }
       }
@@ -9559,7 +9559,7 @@ var require_readable = __commonJS({
         if (this._readableState.closeEmitted) {
           return null;
         }
-        return await new Promise((resolve22, reject) => {
+        return await new Promise((resolve24, reject) => {
           if (this[kContentLength] > limit) {
             this.destroy(new AbortError());
           }
@@ -9572,7 +9572,7 @@ var require_readable = __commonJS({
             if (signal?.aborted) {
               reject(signal.reason ?? new AbortError());
             } else {
-              resolve22(null);
+              resolve24(null);
             }
           }).on("error", noop).on("data", function(chunk) {
             limit -= chunk.length;
@@ -9591,7 +9591,7 @@ var require_readable = __commonJS({
     }
     async function consume(stream2, type) {
       assert(!stream2[kConsume]);
-      return new Promise((resolve22, reject) => {
+      return new Promise((resolve24, reject) => {
         if (isUnusable(stream2)) {
           const rState = stream2._readableState;
           if (rState.destroyed && rState.closeEmitted === false) {
@@ -9608,7 +9608,7 @@ var require_readable = __commonJS({
             stream2[kConsume] = {
               type,
               stream: stream2,
-              resolve: resolve22,
+              resolve: resolve24,
               reject,
               length: 0,
               body: []
@@ -9678,18 +9678,18 @@ var require_readable = __commonJS({
       return buffer;
     }
     function consumeEnd(consume2) {
-      const { type, body, resolve: resolve22, stream: stream2, length } = consume2;
+      const { type, body, resolve: resolve24, stream: stream2, length } = consume2;
       try {
         if (type === "text") {
-          resolve22(chunksDecode(body, length));
+          resolve24(chunksDecode(body, length));
         } else if (type === "json") {
-          resolve22(JSON.parse(chunksDecode(body, length)));
+          resolve24(JSON.parse(chunksDecode(body, length)));
         } else if (type === "arrayBuffer") {
-          resolve22(chunksConcat(body, length).buffer);
+          resolve24(chunksConcat(body, length).buffer);
         } else if (type === "blob") {
-          resolve22(new Blob(body, { type: stream2[kContentType] }));
+          resolve24(new Blob(body, { type: stream2[kContentType] }));
         } else if (type === "bytes") {
-          resolve22(chunksConcat(body, length));
+          resolve24(chunksConcat(body, length));
         }
         consumeFinish(consume2);
       } catch (err) {
@@ -9946,9 +9946,9 @@ var require_api_request = __commonJS({
     };
     function request(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve22, reject) => {
+        return new Promise((resolve24, reject) => {
           request.call(this, opts, (err, data) => {
-            return err ? reject(err) : resolve22(data);
+            return err ? reject(err) : resolve24(data);
           });
         });
       }
@@ -10171,9 +10171,9 @@ var require_api_stream = __commonJS({
     };
     function stream2(opts, factory, callback) {
       if (callback === void 0) {
-        return new Promise((resolve22, reject) => {
+        return new Promise((resolve24, reject) => {
           stream2.call(this, opts, factory, (err, data) => {
-            return err ? reject(err) : resolve22(data);
+            return err ? reject(err) : resolve24(data);
           });
         });
       }
@@ -10458,9 +10458,9 @@ var require_api_upgrade = __commonJS({
     };
     function upgrade(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve22, reject) => {
+        return new Promise((resolve24, reject) => {
           upgrade.call(this, opts, (err, data) => {
-            return err ? reject(err) : resolve22(data);
+            return err ? reject(err) : resolve24(data);
           });
         });
       }
@@ -10552,9 +10552,9 @@ var require_api_connect = __commonJS({
     };
     function connect(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve22, reject) => {
+        return new Promise((resolve24, reject) => {
           connect.call(this, opts, (err, data) => {
-            return err ? reject(err) : resolve22(data);
+            return err ? reject(err) : resolve24(data);
           });
         });
       }
@@ -14416,7 +14416,7 @@ var require_fetch = __commonJS({
       function dispatch({ body }) {
         const url = requestCurrentURL(request);
         const agent = fetchParams.controller.dispatcher;
-        return new Promise((resolve22, reject) => agent.dispatch(
+        return new Promise((resolve24, reject) => agent.dispatch(
           {
             path: url.pathname + url.search,
             origin: url.origin,
@@ -14492,7 +14492,7 @@ var require_fetch = __commonJS({
                 }
               }
               const onError = this.onError.bind(this);
-              resolve22({
+              resolve24({
                 status,
                 statusText,
                 headersList,
@@ -14538,7 +14538,7 @@ var require_fetch = __commonJS({
               for (let i = 0; i < rawHeaders.length; i += 2) {
                 headersList.append(bufferToLowerCasedHeaderName(rawHeaders[i]), rawHeaders[i + 1].toString("latin1"), true);
               }
-              resolve22({
+              resolve24({
                 status,
                 statusText: STATUS_CODES[status],
                 headersList,
@@ -18269,8 +18269,8 @@ var require_util8 = __commonJS({
       return true;
     }
     function delay(ms) {
-      return new Promise((resolve22) => {
-        setTimeout(resolve22, ms).unref();
+      return new Promise((resolve24) => {
+        setTimeout(resolve24, ms).unref();
       });
     }
     module.exports = {
@@ -23946,25 +23946,25 @@ var require_util9 = __commonJS({
         };
       },
       createDeferredPromise: function() {
-        let resolve22;
+        let resolve24;
         let reject;
         const promise = new Promise((res, rej) => {
-          resolve22 = res;
+          resolve24 = res;
           reject = rej;
         });
         return {
           promise,
-          resolve: resolve22,
+          resolve: resolve24,
           reject
         };
       },
       promisify(fn) {
-        return new Promise((resolve22, reject) => {
+        return new Promise((resolve24, reject) => {
           fn((err, ...args) => {
             if (err) {
               return reject(err);
             }
-            return resolve22(...args);
+            return resolve24(...args);
           });
         });
       },
@@ -24778,7 +24778,7 @@ var require_end_of_stream = __commonJS({
         validateBoolean(opts.cleanup, "cleanup");
         autoCleanup = opts.cleanup;
       }
-      return new Promise2((resolve22, reject) => {
+      return new Promise2((resolve24, reject) => {
         const cleanup = eos(stream2, opts, (err) => {
           if (autoCleanup) {
             cleanup();
@@ -24786,7 +24786,7 @@ var require_end_of_stream = __commonJS({
           if (err) {
             reject(err);
           } else {
-            resolve22();
+            resolve24();
           }
         });
       });
@@ -25953,7 +25953,7 @@ var require_readable2 = __commonJS({
         error = this.readableEnded ? null : new AbortError();
         this.destroy(error);
       }
-      return new Promise2((resolve22, reject) => eos(this, (err) => err && err !== error ? reject(err) : resolve22(null)));
+      return new Promise2((resolve24, reject) => eos(this, (err) => err && err !== error ? reject(err) : resolve24(null)));
     };
     Readable2.prototype.push = function(chunk, encoding5) {
       return readableAddChunk(this, chunk, encoding5, false);
@@ -26497,12 +26497,12 @@ var require_readable2 = __commonJS({
     }
     async function* createAsyncIterator(stream2, options2) {
       let callback = nop;
-      function next(resolve22) {
+      function next(resolve24) {
         if (this === stream2) {
           callback();
           callback = nop;
         } else {
-          callback = resolve22;
+          callback = resolve24;
         }
       }
       stream2.on("readable", next);
@@ -27554,7 +27554,7 @@ var require_duplexify = __commonJS({
       );
     };
     function fromAsyncGen(fn) {
-      let { promise, resolve: resolve22 } = createDeferredPromise();
+      let { promise, resolve: resolve24 } = createDeferredPromise();
       const ac = new AbortController2();
       const signal = ac.signal;
       const value = fn(
@@ -27569,7 +27569,7 @@ var require_duplexify = __commonJS({
               throw new AbortError(void 0, {
                 cause: signal.reason
               });
-            ({ promise, resolve: resolve22 } = createDeferredPromise());
+            ({ promise, resolve: resolve24 } = createDeferredPromise());
             yield chunk;
           }
         })(),
@@ -27580,8 +27580,8 @@ var require_duplexify = __commonJS({
       return {
         value,
         write(chunk, encoding5, cb) {
-          const _resolve = resolve22;
-          resolve22 = null;
+          const _resolve = resolve24;
+          resolve24 = null;
           _resolve({
             chunk,
             done: false,
@@ -27589,8 +27589,8 @@ var require_duplexify = __commonJS({
           });
         },
         final(cb) {
-          const _resolve = resolve22;
-          resolve22 = null;
+          const _resolve = resolve24;
+          resolve24 = null;
           _resolve({
             done: true,
             cb
@@ -28041,7 +28041,7 @@ var require_pipeline = __commonJS({
           callback();
         }
       };
-      const wait = () => new Promise2((resolve22, reject) => {
+      const wait = () => new Promise2((resolve24, reject) => {
         if (error) {
           reject(error);
         } else {
@@ -28049,7 +28049,7 @@ var require_pipeline = __commonJS({
             if (error) {
               reject(error);
             } else {
-              resolve22();
+              resolve24();
             }
           };
         }
@@ -28693,8 +28693,8 @@ var require_operators = __commonJS({
                 next = null;
               }
               if (!done && (queue.length >= highWaterMark || cnt >= concurrency)) {
-                await new Promise2((resolve22) => {
-                  resume = resolve22;
+                await new Promise2((resolve24) => {
+                  resume = resolve24;
                 });
               }
             }
@@ -28728,8 +28728,8 @@ var require_operators = __commonJS({
               queue.shift();
               maybeResume();
             }
-            await new Promise2((resolve22) => {
-              next = resolve22;
+            await new Promise2((resolve24) => {
+              next = resolve24;
             });
           }
         } finally {
@@ -28987,7 +28987,7 @@ var require_promises = __commonJS({
     var { finished } = require_end_of_stream();
     require_stream();
     function pipeline4(...streams) {
-      return new Promise2((resolve22, reject) => {
+      return new Promise2((resolve24, reject) => {
         let signal;
         let end;
         const lastArg = streams[streams.length - 1];
@@ -29002,7 +29002,7 @@ var require_promises = __commonJS({
             if (err) {
               reject(err);
             } else {
-              resolve22(value);
+              resolve24(value);
             }
           },
           {
@@ -61282,7 +61282,7 @@ var require_resolve_uri_umd = __commonJS({
         }
         url.path = path12;
       }
-      function resolve22(input, base) {
+      function resolve24(input, base) {
         if (!input && !base)
           return "";
         const url = parseUrl(input);
@@ -61335,7 +61335,7 @@ var require_resolve_uri_umd = __commonJS({
             return url.scheme + "//" + url.user + url.host + url.port + url.path + queryHash;
         }
       }
-      return resolve22;
+      return resolve24;
     }));
   }
 });
@@ -61680,8 +61680,8 @@ var require_trace_mapping_umd = __commonJS({
           this.sources = sources;
           this.sourcesContent = sourcesContent;
           this.ignoreList = parsed.ignoreList || parsed.x_google_ignoreList || void 0;
-          const resolve22 = resolver(mapUrl, sourceRoot);
-          this.resolvedSources = sources.map(resolve22);
+          const resolve24 = resolver(mapUrl, sourceRoot);
+          this.resolvedSources = sources.map(resolve24);
           const { mappings } = parsed;
           if (typeof mappings === "string") {
             this._encoded = mappings;
@@ -71171,7 +71171,7 @@ var require_introspection = __commonJS({
     exports.isStatic = isStatic;
     exports.matchesPattern = matchesPattern;
     exports.referencesImport = referencesImport;
-    exports.resolve = resolve22;
+    exports.resolve = resolve24;
     exports.willIMaybeExecuteBefore = willIMaybeExecuteBefore;
     var _t = require_lib5();
     var {
@@ -71429,7 +71429,7 @@ var require_introspection = __commonJS({
       nodeMap.set(target.node, result);
       return result;
     }
-    function resolve22(dangerous, resolved) {
+    function resolve24(dangerous, resolved) {
       return _resolve.call(this, dangerous, resolved) || this;
     }
     function _resolve(dangerous, resolved) {
@@ -84259,34 +84259,34 @@ var require_yauzl = __commonJS({
     exports.LocalFileHeader = LocalFileHeader;
     exports.RandomAccessReader = RandomAccessReader;
     function openPromise(path12, options2) {
-      return new Promise((resolve22, reject) => {
+      return new Promise((resolve24, reject) => {
         open3(path12, { ...options2, lazyEntries: true }, function(err, zipfile) {
           if (err) return reject(err);
-          resolve22(zipfile);
+          resolve24(zipfile);
         });
       });
     }
     function fromFdPromise(fd, options2) {
-      return new Promise((resolve22, reject) => {
+      return new Promise((resolve24, reject) => {
         fromFd(fd, { ...options2, lazyEntries: true }, function(err, zipfile) {
           if (err) return reject(err);
-          resolve22(zipfile);
+          resolve24(zipfile);
         });
       });
     }
     function fromBufferPromise(buffer, options2) {
-      return new Promise((resolve22, reject) => {
+      return new Promise((resolve24, reject) => {
         fromBuffer(buffer, { ...options2, lazyEntries: true }, function(err, zipfile) {
           if (err) return reject(err);
-          resolve22(zipfile);
+          resolve24(zipfile);
         });
       });
     }
     function fromRandomAccessReaderPromise(reader, totalSize, options2) {
-      return new Promise((resolve22, reject) => {
+      return new Promise((resolve24, reject) => {
         fromRandomAccessReader(reader, totalSize, { ...options2, lazyEntries: true }, function(err, zipfile) {
           if (err) return reject(err);
-          resolve22(zipfile);
+          resolve24(zipfile);
         });
       });
     }
@@ -84570,15 +84570,15 @@ var require_yauzl = __commonJS({
         if (self2.autoClose) self2.close();
       }
       function onEntry(entry) {
-        let { resolve: resolve22 } = pendingResolveReject;
+        let { resolve: resolve24 } = pendingResolveReject;
         pendingResolveReject = null;
-        resolve22({ value: entry });
+        resolve24({ value: entry });
       }
       function onEnd() {
-        let { resolve: resolve22 } = pendingResolveReject;
+        let { resolve: resolve24 } = pendingResolveReject;
         pendingResolveReject = null;
         cleanup();
-        resolve22({ done: true });
+        resolve24({ done: true });
       }
       function onError(err) {
         let { reject } = pendingResolveReject;
@@ -84591,9 +84591,9 @@ var require_yauzl = __commonJS({
           return this;
         },
         next() {
-          const promise = new Promise((resolve22, reject) => {
+          const promise = new Promise((resolve24, reject) => {
             if (pendingResolveReject != null) throw new Error("next() called before previous Promise was resolved.");
-            pendingResolveReject = { resolve: resolve22, reject };
+            pendingResolveReject = { resolve: resolve24, reject };
           });
           self2.readEntry();
           return promise;
@@ -84782,26 +84782,26 @@ var require_yauzl = __commonJS({
       });
     };
     ZipFile.prototype.openReadStreamPromise = function(entry, options2) {
-      return new Promise((resolve22, reject) => {
+      return new Promise((resolve24, reject) => {
         this.openReadStream(entry, options2, function(err, readStream) {
           if (err) return reject(err);
-          resolve22(readStream);
+          resolve24(readStream);
         });
       });
     };
     ZipFile.prototype.openReadStreamLowLevelPromise = function(fileDataStart, compressedSize, relativeStart, relativeEnd, decompress, uncompressedSize) {
-      return new Promise((resolve22, reject) => {
+      return new Promise((resolve24, reject) => {
         this.openReadStream(fileDataStart, compressedSize, relativeStart, relativeEnd, decompress, uncompressedSize, function(err, readStream) {
           if (err) return reject(err);
-          resolve22(readStream);
+          resolve24(readStream);
         });
       });
     };
     ZipFile.prototype.readLocalFileHeaderPromise = function(entry, options2) {
-      return new Promise((resolve22, reject) => {
+      return new Promise((resolve24, reject) => {
         this.readLocalFileHeader(entry, options2, function(err, localFileHeader) {
           if (err) return reject(err);
-          resolve22(localFileHeader);
+          resolve24(localFileHeader);
         });
       });
     };
@@ -86393,11 +86393,11 @@ import { EOL as EOL3 } from "os";
 import { constants, promises } from "fs";
 var __awaiter = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
-    return value instanceof P ? value : new P(function(resolve22) {
-      resolve22(value);
+    return value instanceof P ? value : new P(function(resolve24) {
+      resolve24(value);
     });
   }
-  return new (P || (P = Promise))(function(resolve22, reject) {
+  return new (P || (P = Promise))(function(resolve24, reject) {
     function fulfilled(value) {
       try {
         step(generator.next(value));
@@ -86413,7 +86413,7 @@ var __awaiter = function(thisArg, _arguments, P, generator) {
       }
     }
     function step(result) {
-      result.done ? resolve22(result.value) : adopt(result.value).then(fulfilled, rejected);
+      result.done ? resolve24(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
@@ -91360,7 +91360,7 @@ var GitError = class extends Error {
   }
 };
 function createGitRunner(binary = "git") {
-  return ({ args, cwd, input, env = {} }) => new Promise((resolve22, reject) => {
+  return ({ args, cwd, input, env = {} }) => new Promise((resolve24, reject) => {
     const child = spawn(binary, args, {
       cwd,
       env: {
@@ -91379,7 +91379,7 @@ function createGitRunner(binary = "git") {
     child.on("error", (error) => reject(new GitError(`Can't run ${binary}: ${error.message}. Install git.`)));
     child.on("close", (code) => {
       if (0 === code) {
-        resolve22(output);
+        resolve24(output);
       } else {
         reject(new GitError(`git ${args[0]} failed: ${output.stderr.trim()}`, output.stderr));
       }
@@ -94206,8 +94206,8 @@ function describeZip(zip) {
 }
 function openZip(zip) {
   const options2 = { lazyEntries: true, autoClose: false };
-  return new Promise((resolve22, reject) => {
-    const callback = (error, file) => error ? reject(error) : resolve22(file);
+  return new Promise((resolve24, reject) => {
+    const callback = (error, file) => error ? reject(error) : resolve24(file);
     if ("string" === typeof zip) {
       import_yauzl.default.open(zip, options2, callback);
     } else {
@@ -94221,9 +94221,9 @@ async function readEntries(zip, onEntry) {
     throw new ZipError("ERR_INVALID_ZIP", `${name} isn't a valid ZIP file: ${error.message}`);
   });
   try {
-    await new Promise((resolve22, reject) => {
+    await new Promise((resolve24, reject) => {
       file.on("entry", (entry) => onEntry(entry, file).then(() => file.readEntry(), reject));
-      file.on("end", resolve22);
+      file.on("end", resolve24);
       file.on("error", (error) => reject(new ZipError("ERR_INVALID_ZIP", `Can't read ${name}: ${error.message}`)));
       file.readEntry();
     });
@@ -94284,7 +94284,7 @@ ${errors.join("\n")}`);
   return files.sort();
 }
 function openReadStream(zip, entry) {
-  return new Promise((resolve22, reject) => zip.openReadStream(entry, (error, stream2) => error ? reject(error) : resolve22(stream2)));
+  return new Promise((resolve24, reject) => zip.openReadStream(entry, (error, stream2) => error ? reject(error) : resolve24(stream2)));
 }
 
 // ../../js/wp-release/dist/zip.js
@@ -95705,7 +95705,7 @@ function toSvnPath(path12) {
   return path12.includes("@") ? `${path12}@` : path12;
 }
 function createSvnRunner(binary = "svn") {
-  return ({ args, cwd, input }) => new Promise((resolve22, reject) => {
+  return ({ args, cwd, input }) => new Promise((resolve24, reject) => {
     const child = spawn2(binary, args, {
       cwd,
       env: { ...process.env, LC_ALL: "C" },
@@ -95719,7 +95719,7 @@ function createSvnRunner(binary = "svn") {
     child.on("error", (error) => reject(new SvnError(`Can't run ${binary}: ${error.message}. Install the Subversion command line client.`)));
     child.on("close", (code) => {
       if (0 === code) {
-        resolve22(output);
+        resolve24(output);
       } else {
         reject(new SvnError(`svn ${args[0]} failed: ${output.stderr.trim()}`, output.stderr));
       }
@@ -96644,7 +96644,844 @@ Examples:
 // ../../js/wp-release/dist/git-deploy.js
 import { mkdtemp as mkdtemp5, rm as rm9, stat as stat6 } from "node:fs/promises";
 import { tmpdir as tmpdir4 } from "node:os";
-import { join as join15, resolve as resolve21 } from "node:path";
+import { join as join15, resolve as resolve23 } from "node:path";
+
+// ../../js/subtree-split/dist/split.js
+import { createInterface } from "node:readline";
+import { resolve as resolve22 } from "node:path";
+
+// ../../js/subtree-split/dist/cache.js
+import { mkdir as mkdir11, readFile as readFile14, rename as rename4, writeFile as writeFile8 } from "node:fs/promises";
+import { dirname as dirname10, resolve as resolve21 } from "node:path";
+
+// ../../js/subtree-split/dist/git.js
+import { spawn as spawn3 } from "node:child_process";
+
+// ../../js/subtree-split/dist/errors.js
+var SubtreeSplitError = class extends Error {
+  name = "SubtreeSplitError";
+  code;
+  constructor(code, message2) {
+    super(message2);
+    this.code = code;
+  }
+};
+
+// ../../js/subtree-split/dist/git.js
+async function git(cwd, args, input, env) {
+  const command = new GitProcess(cwd, args, env);
+  if (void 0 !== input) {
+    command.child.stdin.write(input);
+  }
+  command.child.stdin.end();
+  const chunks = [];
+  command.child.stdout.on("data", (chunk) => chunks.push(chunk));
+  await command.exit;
+  return Buffer.concat(chunks);
+}
+async function gitText(cwd, args, env) {
+  return (await git(cwd, args, void 0, env)).toString("utf8").trim();
+}
+var GitProcess = class {
+  child;
+  exit;
+  constructor(cwd, args, env) {
+    this.child = spawn3("git", args, {
+      cwd,
+      stdio: "pipe",
+      env: env ? { ...process.env, ...env } : process.env
+    });
+    this.child.stdin.on("error", () => void 0);
+    const errors = [];
+    this.child.stderr.on("data", (chunk) => errors.push(chunk));
+    this.exit = new Promise((resolve24, reject) => {
+      this.child.on("error", reject);
+      this.child.on("close", (code) => {
+        if (0 === code) {
+          resolve24();
+          return;
+        }
+        reject(new SubtreeSplitError("ERR_GIT_FAILED", `git ${args.join(" ")} failed with ${code}: ${Buffer.concat(errors).toString("utf8").trim()}`));
+      });
+    });
+    this.exit.catch(() => void 0);
+  }
+  /**
+   * Close the input and wait for the command to finish.
+   */
+  async finish() {
+    this.child.stdin.end();
+    await this.exit;
+  }
+  /**
+   * Write to the input, waiting when the command is behind.
+   *
+   * @param data Bytes to write.
+   */
+  async write(data) {
+    const { stdin } = this.child;
+    if (!stdin.write(data)) {
+      await new Promise((resolve24) => {
+        stdin.once("drain", resolve24);
+        stdin.once("close", resolve24);
+      });
+    }
+  }
+};
+var ByteReader = class {
+  buffered = Buffer.alloc(0);
+  ended = false;
+  wake = null;
+  constructor(stream2) {
+    stream2.on("data", (chunk) => {
+      this.buffered = Buffer.concat([this.buffered, chunk]);
+      this.notify();
+    });
+    stream2.on("end", () => {
+      this.ended = true;
+      this.notify();
+    });
+  }
+  notify() {
+    const wake = this.wake;
+    this.wake = null;
+    wake?.();
+  }
+  async fill() {
+    if (this.ended) {
+      throw new SubtreeSplitError("ERR_GIT_FAILED", "Git ended its output before the expected answer.");
+    }
+    await new Promise((resolve24) => {
+      this.wake = resolve24;
+    });
+  }
+  /**
+   * Read a line, without its newline.
+   *
+   * @return Line as a latin1 string, so that every byte is preserved.
+   */
+  async readLine() {
+    let end = this.buffered.indexOf(10);
+    while (-1 === end) {
+      await this.fill();
+      end = this.buffered.indexOf(10);
+    }
+    const line = this.buffered.subarray(0, end).toString("latin1");
+    this.buffered = this.buffered.subarray(end + 1);
+    return line;
+  }
+  /**
+   * Read an exact number of bytes.
+   *
+   * @param length Number of bytes.
+   * @return Bytes.
+   */
+  async readBytes(length) {
+    while (this.buffered.length < length) {
+      await this.fill();
+    }
+    const bytes = this.buffered.subarray(0, length);
+    this.buffered = this.buffered.subarray(length);
+    return bytes;
+  }
+};
+function parseObjectInfo(line) {
+  const [oid, type] = line.split(" ");
+  return line.endsWith(" missing") || !oid || !type ? null : { oid, type };
+}
+var CatFile = class {
+  batch;
+  batchReader;
+  check;
+  checkReader;
+  constructor(cwd) {
+    this.batch = new GitProcess(cwd, ["cat-file", "--batch"]);
+    this.batchReader = new ByteReader(this.batch.child.stdout);
+    this.check = new GitProcess(cwd, ["cat-file", "--batch-check"]);
+    this.checkReader = new ByteReader(this.check.child.stdout);
+  }
+  /**
+   * Read an object.
+   *
+   * @param name Object name.
+   * @return The object, or null when it doesn't exist.
+   */
+  async read(name) {
+    await this.batch.write(`${name}
+`);
+    const [, type, size] = (await this.batchReader.readLine()).split(" ");
+    if (void 0 === type || void 0 === size) {
+      return null;
+    }
+    const body = await this.batchReader.readBytes(Number(size));
+    await this.batchReader.readBytes(1);
+    return { type, body };
+  }
+  /**
+   * Find the type and name of objects.
+   *
+   * @param names Object names, such as `<commit>:<path>`.
+   * @return The object name and type of each, in the same order, or null for a name that doesn't exist.
+   */
+  async describe(names) {
+    await this.check.write(names.map((name) => `${name}
+`).join(""));
+    const answers = [];
+    while (answers.length < names.length) {
+      answers.push(parseObjectInfo(await this.checkReader.readLine()));
+    }
+    return answers;
+  }
+  /**
+   * Stop the processes.
+   */
+  async close() {
+    await Promise.all([this.batch.finish(), this.check.finish()]);
+  }
+};
+
+// ../../js/subtree-split/dist/cache.js
+var CACHE_VERSION = 1;
+async function defaultCachePath(cwd, prefix) {
+  const name = prefix.replace(/[^A-Za-z0-9._-]/g, "-");
+  const path12 = await gitText(cwd, [
+    "rev-parse",
+    "--git-path",
+    `subtree-split-cache/${name}.json`
+  ]);
+  return resolve21(cwd, path12);
+}
+async function loadCache(path12, prefix, objectFormat) {
+  try {
+    const file = JSON.parse(await readFile14(path12, "utf8"));
+    return file.version === CACHE_VERSION && file.prefix === prefix && file.objectFormat === objectFormat ? {
+      tips: file.tips,
+      commits: new Map(Object.entries(file.commits))
+    } : null;
+  } catch {
+    return null;
+  }
+}
+async function saveCache(path12, prefix, objectFormat, cache) {
+  const file = {
+    version: CACHE_VERSION,
+    prefix,
+    objectFormat,
+    tips: cache.tips,
+    commits: Object.fromEntries(cache.commits)
+  };
+  const temporary = `${path12}.${process.pid}.tmp`;
+  await mkdir11(dirname10(path12), { recursive: true });
+  await writeFile8(temporary, JSON.stringify(file));
+  await rename4(temporary, path12);
+}
+
+// ../../js/subtree-split/dist/commit.js
+import { createHash as createHash5 } from "node:crypto";
+var UTF8_LABELS = ["utf-8", "utf8"];
+function toUtf8(bytes, encoding5) {
+  if (null === encoding5 || UTF8_LABELS.includes(encoding5.toLowerCase())) {
+    return bytes;
+  }
+  try {
+    return Buffer.from(new TextDecoder(encoding5, { fatal: true }).decode(bytes), "utf8");
+  } catch {
+    return bytes;
+  }
+}
+function parseIdent(value, encoding5) {
+  const text = toUtf8(value, encoding5).toString("latin1");
+  const open3 = text.indexOf("<");
+  const close = text.indexOf(">", open3);
+  const date = text.slice(close + 1).trim().split(" ");
+  const [timestamp, timezone] = date;
+  if (-1 === open3 || -1 === close || !timestamp || !timezone) {
+    throw new SubtreeSplitError("ERR_INVALID_COMMIT", `Can't read the identity "${text}" of a commit.`);
+  }
+  return {
+    name: text.slice(0, open3).trimEnd(),
+    email: text.slice(open3 + 1, close),
+    timestamp,
+    timezone
+  };
+}
+function parseCommit(raw) {
+  const separator = raw.indexOf("\n\n");
+  const headerEnd = -1 === separator ? raw.length : separator;
+  const message2 = -1 === separator ? Buffer.alloc(0) : raw.subarray(separator + 2);
+  const headers = /* @__PURE__ */ new Map();
+  let start = 0;
+  while (start < headerEnd) {
+    const lineEnd = raw.indexOf(10, start);
+    const end = -1 === lineEnd || lineEnd > headerEnd ? headerEnd : lineEnd;
+    const line = raw.subarray(start, end);
+    const space = line.indexOf(32);
+    if (space > 0 && !headers.has(line.subarray(0, space).toString("latin1"))) {
+      headers.set(line.subarray(0, space).toString("latin1"), line.subarray(space + 1));
+    }
+    start = end + 1;
+  }
+  const encoding5 = headers.get("encoding")?.toString("latin1") ?? null;
+  const author = headers.get("author");
+  const committer = headers.get("committer");
+  if (!author || !committer) {
+    throw new SubtreeSplitError("ERR_INVALID_COMMIT", "A commit has no author or committer.");
+  }
+  return {
+    author: parseIdent(author, encoding5),
+    committer: parseIdent(committer, encoding5),
+    message: toUtf8(message2, encoding5)
+  };
+}
+function isCrud(char, dotIsCrud) {
+  return char <= " " || `,:;<>"\\'`.includes(char) || dotIsCrud && "." === char;
+}
+function withoutCrud(value, dotIsCrud) {
+  let start = 0;
+  let end = value.length;
+  while (start < end && isCrud(value.charAt(start), dotIsCrud)) {
+    start++;
+  }
+  while (end > start && isCrud(value.charAt(end - 1), dotIsCrud)) {
+    end--;
+  }
+  return value.slice(start, end).replace(/[\n<>]/g, "");
+}
+function shellRead(value) {
+  return value.replace(/^[ \t]+|[ \t]+$/g, "").replace(/\\(.)/gs, "$1");
+}
+function hasEdgeDot(copied) {
+  return [copied.author, copied.committer].some((ident) => [ident.name, ident.email].some((value) => /^[\s.]|[\s.]$/.test(value)));
+}
+function formatIdent(ident, dotIsCrud) {
+  const name = withoutCrud(shellRead(ident.name), dotIsCrud);
+  const email = withoutCrud(shellRead(ident.email), dotIsCrud);
+  if ("" === name) {
+    throw new SubtreeSplitError("ERR_INVALID_COMMIT", `The name of ${email} in a commit is empty after the cleanup that git commit-tree does.`);
+  }
+  return `${name} <${email}> ${ident.timestamp} ${ident.timezone}`;
+}
+function buildCommit(input) {
+  const { tree, parents, copied, objectFormat, dotIsCrud } = input;
+  const author = formatIdent(copied.author, dotIsCrud);
+  const committer = formatIdent(copied.committer, dotIsCrud);
+  const body = Buffer.concat([
+    Buffer.from(`tree ${tree}
+${parents.map((parent) => `parent ${parent}
+`).join("")}author ${author}
+committer ${committer}
+
+`, "latin1"),
+    copied.message
+  ]);
+  const oid = createHash5(objectFormat).update(`commit ${body.length}\0`).update(body).digest("hex");
+  return { oid, author, committer, message: copied.message };
+}
+
+// ../../js/subtree-split/dist/fast-import.js
+var FastImportWriter = class {
+  process = null;
+  last = null;
+  /** Marks of the commits in the stream, which fast-import can't find by their hashes until it is done. */
+  marks = /* @__PURE__ */ new Map();
+  ref = `refs/subtree-split/${process.pid}-${Date.now()}`;
+  cwd;
+  constructor(cwd) {
+    this.cwd = cwd;
+  }
+  /**
+   * Add a commit to the stream.
+   *
+   * @param commit Commit to write.
+   */
+  async write(commit) {
+    this.process ??= new GitProcess(this.cwd, [
+      "fast-import",
+      "--quiet",
+      "--date-format=raw"
+    ]);
+    const [first, ...merges] = commit.parents.map((parent) => this.reference(parent));
+    this.marks.set(commit.oid, this.marks.size + 1);
+    const header = [
+      // A new root commit must not continue from the previous commit.
+      void 0 === first ? `reset ${this.ref}` : null,
+      `commit ${this.ref}`,
+      `mark :${this.marks.size}`,
+      `author ${commit.author}`,
+      `committer ${commit.committer}`
+    ].filter((line) => null !== line);
+    await this.process.write(Buffer.concat([
+      Buffer.from(`${header.join("\n")}
+data ${commit.message.length}
+`, "latin1"),
+      commit.message,
+      Buffer.from(`
+${void 0 === first ? "" : `from ${first}
+`}${merges.map((parent) => `merge ${parent}
+`).join("")}M 040000 ${commit.tree} 
+
+`, "latin1")
+    ]));
+    this.last = commit.oid;
+  }
+  reference(oid) {
+    const mark = this.marks.get(oid);
+    return void 0 === mark ? oid : `:${mark}`;
+  }
+  /**
+   * Stop after a failure: let `git fast-import` finish the commits that it
+   * has, which are valid, and remove its ref, so that no process is left
+   * waiting for input.
+   */
+  async abort() {
+    if (this.process) {
+      await this.process.finish().catch(() => void 0);
+      await gitText(this.cwd, ["update-ref", "-d", this.ref]).catch(() => void 0);
+    }
+  }
+  /**
+   * Finish writing and check that the last commit has the expected hash.
+   */
+  async finish() {
+    if (this.process && this.last) {
+      await this.process.finish();
+      const written = await gitText(this.cwd, [
+        "rev-parse",
+        this.ref
+      ]);
+      await gitText(this.cwd, ["update-ref", "-d", this.ref]);
+      if (written !== this.last) {
+        throw new SubtreeSplitError("ERR_COMMIT_MISMATCH", `Git wrote commit ${written} where ${this.last} was expected, so the commits aren't the same as git subtree split makes.`);
+      }
+    }
+  }
+};
+
+// ../../js/subtree-split/dist/graph.js
+var CommitGraph = class {
+  nodes = /* @__PURE__ */ new Map();
+  objects;
+  constructor(objects) {
+    this.objects = objects;
+  }
+  /**
+   * Add a commit that was created, which the repository doesn't have yet.
+   *
+   * @param oid     Commit hash.
+   * @param tree    Tree hash.
+   * @param parents Parent hashes.
+   */
+  add(oid, tree, parents) {
+    this.nodes.set(oid, {
+      tree,
+      parents,
+      generation: 0 === parents.length ? 1 : void 0
+    });
+  }
+  /**
+   * Get the tree of a commit.
+   *
+   * @param oid Commit hash.
+   * @return Tree hash.
+   */
+  async treeOf(oid) {
+    return (await this.node(oid)).tree;
+  }
+  /**
+   * Check whether a commit is the other commit, or one of its ancestors.
+   *
+   * @param ancestor   Commit hash.
+   * @param descendant Commit hash.
+   * @return Whether it is reachable from the descendant.
+   */
+  async isAncestor(ancestor, descendant) {
+    if (ancestor === descendant) {
+      return true;
+    }
+    const limit = await this.generationOf(ancestor);
+    await this.generationOf(descendant);
+    const seen = /* @__PURE__ */ new Set([descendant]);
+    const pending = [descendant];
+    let found = false;
+    while (!found && pending.length > 0) {
+      const node = this.known(pending.pop() ?? "");
+      node.parents.forEach((parent) => {
+        found ||= parent === ancestor;
+        if (!seen.has(parent) && (this.known(parent).generation ?? 0) > limit) {
+          seen.add(parent);
+          pending.push(parent);
+        }
+      });
+    }
+    return found;
+  }
+  known(oid) {
+    const node = this.nodes.get(oid);
+    if (!node) {
+      throw new SubtreeSplitError("ERR_INVALID_COMMIT", `Commit ${oid} is missing from the split history.`);
+    }
+    return node;
+  }
+  async node(oid) {
+    const cached = this.nodes.get(oid);
+    if (cached) {
+      return cached;
+    }
+    const object = await this.objects.read(oid);
+    if (!object || "commit" !== object.type) {
+      throw new SubtreeSplitError("ERR_INVALID_COMMIT", `Commit ${oid} doesn't exist.`);
+    }
+    const lines = object.body.subarray(0, Math.max(object.body.indexOf("\n\n"), 0) || object.body.length).toString("latin1").split("\n");
+    const node = {
+      tree: lines.find((line) => line.startsWith("tree "))?.slice(5) ?? "",
+      parents: lines.filter((line) => line.startsWith("parent ")).map((line) => line.slice(7))
+    };
+    this.nodes.set(oid, node);
+    return node;
+  }
+  /**
+   * Find the generation number of a commit, loading its ancestors that aren't known yet.
+   *
+   * @param oid Commit hash.
+   * @return Generation number.
+   */
+  async generationOf(oid) {
+    const stack = [oid];
+    while (stack.length > 0) {
+      await this.resolveTop(stack);
+    }
+    return this.known(oid).generation ?? 0;
+  }
+  async resolveTop(stack) {
+    const node = await this.node(stack.at(-1) ?? "");
+    if (void 0 !== node.generation) {
+      stack.pop();
+      return;
+    }
+    const unresolved = await this.unresolvedParents(node);
+    if (0 === unresolved.length) {
+      node.generation = 1 + Math.max(
+        // A root commit has generation 1, not minus infinity.
+        0,
+        ...node.parents.map((parent) => this.known(parent).generation ?? 0)
+      );
+      stack.pop();
+    } else {
+      stack.push(...unresolved);
+    }
+  }
+  async unresolvedParents(node) {
+    const unresolved = [];
+    for (const parent of node.parents) {
+      const parentNode = await this.node(parent);
+      if (void 0 === parentNode.generation) {
+        unresolved.push(parent);
+      }
+    }
+    return unresolved;
+  }
+};
+
+// ../../js/subtree-split/dist/split.js
+var BATCH_SIZE = 256;
+var MINIMUM_GIT = [2, 29];
+async function assertSupportedGit(cwd) {
+  const version = await gitText(cwd, ["version"]);
+  const [major = 0, minor = 0] = (/(\d+)\.(\d+)/.exec(version)?.slice(1) ?? []).map(Number);
+  const [minimumMajor, minimumMinor] = MINIMUM_GIT;
+  if (major < minimumMajor || major === minimumMajor && minor < minimumMinor) {
+    throw new SubtreeSplitError("ERR_UNSUPPORTED_GIT", `${version} is too old. Git ${minimumMajor}.${minimumMinor} or later is required.`);
+  }
+}
+var StaleCacheError = class extends Error {
+  name = "StaleCacheError";
+};
+function normalizePrefix(prefix) {
+  const normalized = prefix.replace(/\/+$/, "");
+  const segments = normalized.split("/");
+  const valid = "" !== normalized && !normalized.includes("\n") && segments.every((segment) => "" !== segment && "." !== segment && ".." !== segment);
+  if (!valid) {
+    throw new SubtreeSplitError("ERR_INVALID_PREFIX", `The prefix "${prefix}" must be a directory path relative to the root of the repository, like "packages/js/example".`);
+  }
+  return normalized;
+}
+async function splitHistory(options2) {
+  const cwd = resolve22(options2.cwd ?? process.cwd());
+  const prefix = normalizePrefix(options2.prefix);
+  await assertSupportedGit(cwd);
+  if ("true" === await gitText(cwd, ["rev-parse", "--is-shallow-repository"])) {
+    throw new SubtreeSplitError("ERR_SHALLOW_REPOSITORY", "The repository is a shallow clone, which has incomplete history. Fetch the full history first, for example with `git fetch --unshallow`.");
+  }
+  const tip = await gitText(cwd, [
+    "rev-parse",
+    "--verify",
+    `${options2.ref ?? "HEAD"}^{commit}`
+  ]);
+  const objectFormat = await gitText(cwd, [
+    "rev-parse",
+    "--show-object-format"
+  ]);
+  const cachePath = true === options2.cache ? await defaultCachePath(cwd, prefix) : options2.cache && resolve22(cwd, options2.cache) || null;
+  const cache = cachePath ? await loadCache(cachePath, prefix, objectFormat) : null;
+  const run2 = (useCache) => new Splitter({
+    cwd,
+    prefix,
+    tip,
+    objectFormat,
+    cachePath,
+    cache: useCache
+  }).run();
+  try {
+    return await run2(cache);
+  } catch (error) {
+    if (cache && error instanceof StaleCacheError) {
+      return run2(null);
+    }
+    throw error;
+  }
+}
+var Splitter = class {
+  objects;
+  graph;
+  writer;
+  /** Source commit to split commit, with an empty string for a commit without the prefix. */
+  split;
+  /** Commits that this call created. */
+  created = /* @__PURE__ */ new Set();
+  /** Commits from the cache that exist. */
+  verified = /* @__PURE__ */ new Set();
+  /** Whether this version of Git removes a dot from the ends of names, once known. */
+  dotIsCrud = null;
+  input;
+  constructor(input) {
+    this.input = input;
+    this.objects = new CatFile(input.cwd);
+    this.graph = new CommitGraph(this.objects);
+    this.writer = new FastImportWriter(input.cwd);
+    this.split = new Map(input.cache?.commits);
+  }
+  async run() {
+    try {
+      return await this.splitTip();
+    } catch (error) {
+      await this.writer.abort();
+      throw error;
+    } finally {
+      await this.objects.close().catch(() => void 0);
+    }
+  }
+  async splitTip() {
+    const { cwd, prefix, tip, cache, cachePath, objectFormat } = this.input;
+    const [info2] = await this.objects.describe([
+      `${tip}:${prefix}`
+    ]);
+    if (null === this.treeOf(info2 ?? null)) {
+      return null;
+    }
+    const tips = await this.existingTips(cache);
+    await this.splitCommits(tips);
+    await this.writer.finish();
+    const result = this.split.get(tip) || null;
+    if (cachePath) {
+      await saveCache(cachePath, prefix, objectFormat, {
+        commits: this.split,
+        tips: await this.independentTips(cwd, [...tips, tip])
+      });
+    }
+    return result;
+  }
+  async existingTips(cache) {
+    const tips = cache?.tips ?? [];
+    const infos = await this.objects.describe(tips);
+    return tips.filter((_tip, index) => "commit" === infos[index]?.type);
+  }
+  async independentTips(cwd, tips) {
+    const unique = [...new Set(tips)];
+    return unique.length < 2 ? unique : (await gitText(cwd, [
+      "merge-base",
+      "--independent",
+      ...unique
+    ])).split("\n");
+  }
+  /**
+   * Process the commits that aren't in the cache, oldest first.
+   *
+   * @param known Source commits whose history is in the cache.
+   */
+  async splitCommits(known) {
+    const { cwd, tip } = this.input;
+    const list = new GitProcess(cwd, [
+      "rev-list",
+      "--parents",
+      "--topo-order",
+      "--reverse",
+      "--stdin"
+    ]);
+    list.child.stdin.end(`${tip}
+${known.map((commit) => `^${commit}
+`).join("")}`);
+    try {
+      await this.processLines(list);
+    } catch (error) {
+      list.child.kill();
+      throw error;
+    }
+    await list.exit;
+  }
+  async processLines(list) {
+    let batch = [];
+    for await (const line of createInterface({
+      input: list.child.stdout
+    })) {
+      batch.push(line.split(" "));
+      if (batch.length >= BATCH_SIZE) {
+        await this.processBatch(batch);
+        batch = [];
+      }
+    }
+    await this.processBatch(batch);
+  }
+  async processBatch(batch) {
+    const { prefix } = this.input;
+    const infos = await this.objects.describe(batch.map(([commit]) => `${commit}:${prefix}`));
+    for (const [index, [commit, ...parents]] of batch.entries()) {
+      await this.processCommit(commit ?? "", parents, this.treeOf(infos[index] ?? null));
+    }
+  }
+  /**
+   * Get the tree of the prefix, like `subtree_for_commit`: a submodule
+   * counts as no tree, and a file is an error.
+   *
+   * @param info Object at the prefix.
+   * @return Tree hash, or null.
+   */
+  treeOf(info2) {
+    if (info2 && "blob" === info2.type) {
+      throw new SubtreeSplitError("ERR_INVALID_TREE_ENTRY", `The tree entry of "${this.input.prefix}" is of type blob, expected tree or commit.`);
+    }
+    return "tree" === info2?.type ? info2.oid : null;
+  }
+  /**
+   * Split one commit, like `process_split_commit`.
+   *
+   * @param commit  Source commit.
+   * @param parents Parents of the source commit.
+   * @param tree    Tree of the prefix in the source commit, or null.
+   */
+  async processCommit(commit, parents, tree) {
+    const mapped = parents.map((parent) => this.split.get(parent)).filter((value) => !!value);
+    if (null === tree) {
+      this.split.set(commit, mapped.length > 0 ? commit : "");
+      return;
+    }
+    await this.verifyCached(mapped);
+    this.split.set(commit, await this.copyOrSkip(commit, tree, mapped));
+  }
+  async verifyCached(commits) {
+    const unverified = commits.filter((commit) => !this.created.has(commit) && !this.verified.has(commit));
+    const infos = await this.objects.describe(unverified);
+    if (infos.some((info2) => "commit" !== info2?.type)) {
+      throw new StaleCacheError("The cache has commits that no longer exist.");
+    }
+    unverified.forEach((commit) => this.verified.add(commit));
+  }
+  /**
+   * Decide what a commit becomes, like `copy_or_skip`: one of its split
+   * parents when that has the same tree and nothing else would be lost, or a
+   * new commit with the tree of the prefix.
+   *
+   * @param commit  Source commit.
+   * @param tree    Tree of the prefix.
+   * @param parents Split commits of the parents.
+   * @return Split commit.
+   */
+  async copyOrSkip(commit, tree, parents) {
+    let identical = null;
+    let nonidentical = null;
+    let mustCopy = false;
+    const unique = [];
+    for (const parent of parents) {
+      const sameTree = tree === await this.graph.treeOf(parent);
+      if (!sameTree) {
+        nonidentical = parent;
+      } else if (null === identical) {
+        identical = parent;
+      } else {
+        const next = await this.chooseIdentical(identical, parent);
+        identical = next.identical;
+        mustCopy ||= next.mustCopy;
+      }
+      if (!unique.includes(parent)) {
+        unique.push(parent);
+      }
+    }
+    if (null !== identical && null !== nonidentical && !mustCopy) {
+      mustCopy = !await this.graph.isAncestor(nonidentical, identical);
+    }
+    return null !== identical && !mustCopy ? identical : this.createCommit(commit, tree, unique);
+  }
+  /**
+   * Pick between two parents with the tree: the newer one when one is an
+   * ancestor of the other, otherwise the commit must be copied.
+   *
+   * @param identical Parent with the tree that was found first.
+   * @param parent    Another parent with the tree.
+   * @return The parent to keep, and whether the commit must be copied.
+   */
+  async chooseIdentical(identical, parent) {
+    const older = await this.graph.isAncestor(identical, parent);
+    const newer = !older && await this.graph.isAncestor(parent, identical);
+    return {
+      identical: older ? parent : identical,
+      mustCopy: !older && !newer
+    };
+  }
+  /**
+   * Find out whether this version of Git removes a dot from the ends of the
+   * names that it writes to commits, which older versions do and newer ones
+   * don't. The answer comes from Git itself, so it is the same one that
+   * `git commit-tree` gives.
+   *
+   * @return Whether a dot is removed.
+   */
+  async gitRemovesDots() {
+    this.dotIsCrud ??= !(await gitText(this.input.cwd, ["var", "GIT_AUTHOR_IDENT"], {
+      GIT_AUTHOR_NAME: "N.",
+      GIT_AUTHOR_EMAIL: "e@example.com",
+      GIT_AUTHOR_DATE: "1700000000 +0000"
+    })).startsWith("N. <");
+    return this.dotIsCrud;
+  }
+  /**
+   * Create a commit like `copy_commit`: the tree of the prefix with the
+   * author, committer and message of the source commit.
+   *
+   * @param commit  Source commit.
+   * @param tree    Tree of the prefix.
+   * @param parents Split parents.
+   * @return Hash of the new commit.
+   */
+  async createCommit(commit, tree, parents) {
+    const object = await this.objects.read(commit);
+    if (!object || "commit" !== object.type) {
+      throw new SubtreeSplitError("ERR_INVALID_COMMIT", `Commit ${commit} doesn't exist.`);
+    }
+    const copied = parseCommit(object.body);
+    const built = buildCommit({
+      tree,
+      parents,
+      copied,
+      objectFormat: this.input.objectFormat,
+      dotIsCrud: hasEdgeDot(copied) && await this.gitRemovesDots()
+    });
+    await this.writer.write({ tree, parents, ...built });
+    this.graph.add(built.oid, tree, parents);
+    this.created.add(built.oid);
+    return built.oid;
+  }
+};
+
+// ../../js/wp-release/dist/git-deploy.js
 function isValidRefName(name) {
   return /^[^\s~^:?*[\\]+$/.test(name) && !/(^[-/.]|\/\.|\.\.|\/\/|@\{|\.lock$|[/.]$)/.test(name);
 }
@@ -96670,8 +97507,8 @@ function getGitAuthEnv(gitUrl, token, env = process.env) {
   } : {};
 }
 function resolveGitDeployOptions(input = {}) {
-  const cwd = resolve21(input.cwd ?? process.cwd());
-  const sourceDir = resolve21(cwd, input.sourceDir || ".");
+  const cwd = resolve23(input.cwd ?? process.cwd());
+  const sourceDir = resolve23(cwd, input.sourceDir || ".");
   const names = [
     ["branch", input.branch],
     ["tag", input.tag]
@@ -96878,9 +97715,9 @@ var GitDeploy = class {
    * Check whether a release was made from newer source history: the source
    * history of the release, its last parent, already has the source as an
    * older commit. The same source, a newer one, including a revert, and
-   * unrelated history aren't outdated. With splitPrefix, git subtree split
-   * creates the same commits for the same history, so the split of an older
-   * build is part of the split of a newer one.
+   * unrelated history aren't outdated. With splitPrefix, the split creates the
+   * same commits for the same history, so the split of an older build is part
+   * of the split of a newer one.
    *
    * @param source   Source history from getSourceHistory().
    * @param previous Previous release.
@@ -96904,15 +97741,30 @@ var GitDeploy = class {
   }
   /**
    * Get the source history parent of a release: the source commit, or the
-   * history of splitPrefix from git subtree split.
+   * history of splitPrefix split into its own commits, the same commits that
+   * git subtree split makes, so that the release repositories keep the
+   * history that they have.
    *
    * @return Commit hash.
+   * @throws {ValidationError} When splitPrefix doesn't exist at the source commit.
    */
   async getSourceHistory() {
     const { splitPrefix, sourceRef } = this.options;
-    return this.git({
-      args: splitPrefix ? ["subtree", "split", `--prefix=${splitPrefix}`, sourceRef] : ["rev-parse", `${sourceRef}^{commit}`]
+    if (!splitPrefix) {
+      return this.git({
+        args: ["rev-parse", `${sourceRef}^{commit}`]
+      });
+    }
+    this.logger.debug(`Splitting the history of ${splitPrefix}`);
+    const split = await splitHistory({
+      cwd: await this.getRepoRoot(),
+      prefix: splitPrefix,
+      ref: sourceRef
     });
+    if (null === split) {
+      throw new ValidationError(`The directory ${splitPrefix} doesn't exist at ${sourceRef}, so it has no history to release.`);
+    }
+    return split;
   }
   /**
    * Check the tag in the repository before anything is pushed. Tags are
@@ -97080,8 +97932,9 @@ Configured packages (instead of the options above):
 Options:
   --git-url <url>         Repository to deploy to
   --split-prefix <dir>    Use the history of this directory of the source
-                          repository, from git subtree split, as the source
-                          history (default: the source commit)
+                          repository, split into its own commits like git
+                          subtree split does, as the source history
+                          (default: the source commit)
   --source-ref <ref>      Source commit (default: HEAD)
   --distignore <file>     Ignore file (default: <source-dir>/.distignore when present)
   --no-distignore         Don't read any ignore file
@@ -97325,7 +98178,7 @@ function parseChangesetProjectArgs(values) {
 }
 
 // ../../js/wp-release/dist/changeset-prompt.js
-import { createInterface } from "node:readline";
+import { createInterface as createInterface2 } from "node:readline";
 
 // ../../js/wp-release/dist/changesets.js
 var CHANGESET_BUMPS = ["patch", "minor", "major"];
@@ -97579,7 +98432,7 @@ ${legend}
    */
   getLines() {
     if (!this.lines) {
-      this.readline = createInterface({
+      this.readline = createInterface2({
         input: this.terminal.input,
         terminal: false,
         crlfDelay: Infinity
@@ -97709,7 +98562,7 @@ async function resolveSingleProjectConfig(cwd, options2 = {}, tagFormat) {
 import path11 from "node:path";
 
 // ../../js/wp-release/dist/changelog.js
-import { readFile as readFile14, writeFile as writeFile8 } from "node:fs/promises";
+import { readFile as readFile15, writeFile as writeFile9 } from "node:fs/promises";
 import path8 from "node:path";
 async function getVersionedReleases(repository, config, releases, changesetDirectory) {
   const commits = /* @__PURE__ */ new Map();
@@ -97776,7 +98629,7 @@ ${release.changelog}
   const changelog = path8.join(directory, "CHANGELOG.md");
   let previous = "";
   try {
-    previous = await readFile14(changelog, "utf8");
+    previous = await readFile15(changelog, "utf8");
   } catch (error) {
     if ("ENOENT" !== error.code) {
       throw error;
@@ -97786,7 +98639,7 @@ ${release.changelog}
   if (!releaseHeading.test(previous)) {
     await journal.remember(changelog);
     if (void 0 !== changelogInsertAfter) {
-      await writeFile8(changelog, insertAfterMarker(previous, changelogInsertAfter, section, changelog));
+      await writeFile9(changelog, insertAfterMarker(previous, changelogInsertAfter, section, changelog));
     } else {
       const versionHeading = /^##[ \t]+v?\d+(?:\.\d+){1,2}(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?(?:[ \t]+.*)?$/m.exec(previous);
       const heading = /^#[ \t]+[^\r\n]+[ \t]*$/m.exec(previous);
@@ -97797,9 +98650,9 @@ ${release.changelog}
         const prefix = before ? `${before}
 
 ` : "";
-        await writeFile8(changelog, `${prefix}${section}${after}`);
+        await writeFile9(changelog, `${prefix}${section}${after}`);
       } else {
-        await writeFile8(changelog, `${section}${previous}`);
+        await writeFile9(changelog, `${section}${previous}`);
       }
     }
   }
@@ -97811,7 +98664,7 @@ ${release.changelog}
     let readmeAlreadyVersioned = false;
     for (const file of readme) {
       try {
-        const contents = await readFile14(file, "utf8");
+        const contents = await readFile15(file, "utf8");
         readmeFound = true;
         const defaultHeading = void 0 === changelogInsertAfter ? /^==\s*Changelog\s*==\s*$/im.exec(contents)?.[0] : void 0;
         const insertionMarker = changelogInsertAfter ?? defaultHeading;
@@ -97827,7 +98680,7 @@ ${summaries.map((item) => `* ${item.replaceAll(/\r?\n/g, "\n  ")}`).join("\n")}
 
 `;
           await journal.remember(file);
-          await writeFile8(file, insertAfterMarker(contents, insertionMarker, readmeSection.trimStart(), file));
+          await writeFile9(file, insertAfterMarker(contents, insertionMarker, readmeSection.trimStart(), file));
           readmeUpdated = true;
         }
       } catch (error) {
@@ -97844,7 +98697,7 @@ ${summaries.map((item) => `* ${item.replaceAll(/\r?\n/g, "\n  ")}`).join("\n")}
 async function readChangelogSection(directory, version) {
   let contents = "";
   try {
-    contents = await readFile14(path8.join(directory, "CHANGELOG.md"), "utf8");
+    contents = await readFile15(path8.join(directory, "CHANGELOG.md"), "utf8");
   } catch (error) {
     if ("ENOENT" !== error.code) {
       throw error;
@@ -97861,7 +98714,7 @@ async function readChangelogSection(directory, version) {
 }
 async function getLatestChangelogVersion(directory, fallback) {
   try {
-    const contents = await readFile14(path8.join(directory, "CHANGELOG.md"), "utf8");
+    const contents = await readFile15(path8.join(directory, "CHANGELOG.md"), "utf8");
     const match2 = /^##\s+(\d+\.\d+\.\d+)(?:\s|$)/m.exec(contents);
     return match2?.[1] ?? fallback;
   } catch (error) {
@@ -97885,7 +98738,7 @@ function insertAfterMarker(contents, marker, section, file) {
 // ../../js/wp-release/dist/changeset-dependents.js
 var import_satisfies = __toESM(require_satisfies(), 1);
 var import_valid = __toESM(require_valid(), 1);
-import { readFile as readFile15, writeFile as writeFile9 } from "node:fs/promises";
+import { readFile as readFile16, writeFile as writeFile10 } from "node:fs/promises";
 import path9 from "node:path";
 import { isDeepStrictEqual } from "node:util";
 var DEFAULT_SECTIONS = ["dependencies", "optionalDependencies"];
@@ -98078,13 +98931,13 @@ async function updateDependencyDeclaration(input) {
     }
     const changed = void 0 !== nextSpec && nextSpec !== spec;
     if (changed) {
-      const contents = await readFile15(file, "utf8");
+      const contents = await readFile16(file, "utf8");
       const declared = new RegExp(`"${escapeRegExp(name)}"\\s*:\\s*"${escapeRegExp(spec)}"`);
       if (!declared.test(contents)) {
         throw new ValidationError(`The dependency spec of "${name}" in ${dependent.name}'s ${file} doesn't match "${spec}"; rewrite it to "${nextSpec}".`);
       }
       await journal.remember(file);
-      await writeFile9(file, contents.replace(declared, `"${name}": "${nextSpec}"`));
+      await writeFile10(file, contents.replace(declared, `"${name}": "${nextSpec}"`));
     }
   }
 }
@@ -98196,7 +99049,7 @@ function isExcludedDependent(dependent, rule) {
 
 // ../../js/wp-release/dist/changeset-files.js
 import { randomUUID as randomUUID3 } from "node:crypto";
-import { access as access4, mkdir as mkdir11, readdir as readdir8, readFile as readFile16, rm as rm10, writeFile as writeFile10 } from "node:fs/promises";
+import { access as access4, mkdir as mkdir12, readdir as readdir8, readFile as readFile17, rm as rm10, writeFile as writeFile11 } from "node:fs/promises";
 import path10 from "node:path";
 async function readChangesets(directory) {
   let entries;
@@ -98208,7 +99061,7 @@ async function readChangesets(directory) {
     }
     throw error;
   }
-  return Promise.all(entries.filter((name) => name.endsWith(".md") && !name.startsWith("README")).sort().map(async (name) => parseChangeset(await readFile16(path10.join(directory, name), "utf8"), name)));
+  return Promise.all(entries.filter((name) => name.endsWith(".md") && !name.startsWith("README")).sort().map(async (name) => parseChangeset(await readFile17(path10.join(directory, name), "utf8"), name)));
 }
 async function readChangesetsSince(repository, directory, changesets, since, uncommitted = false) {
   const relativeDirectory = repository.relativePath(directory);
@@ -98220,7 +99073,7 @@ async function readChangesetsSince(repository, directory, changesets, since, unc
   return changesets.filter((changeset) => changedFiles.has(path10.posix.join(relativeDirectory, changeset.fileName)));
 }
 async function writeChangeset(directory, packages, summary2, name) {
-  await mkdir11(directory, { recursive: true });
+  await mkdir12(directory, { recursive: true });
   const fileName = `${name ?? randomUUID3().slice(0, 8)}.md`;
   const file = path10.join(directory, fileName);
   let exists2 = false;
@@ -98236,7 +99089,7 @@ async function writeChangeset(directory, packages, summary2, name) {
     throw new ValidationError(`Changeset ${fileName} already exists.`);
   }
   const entries = Object.entries(packages).sort((a, b) => a[0].localeCompare(b[0])).map(([pkg, bump]) => `${JSON.stringify(pkg)}: ${bump}`).join("\n");
-  await writeFile10(file, `---
+  await writeFile11(file, `---
 ${entries}
 ---
 
@@ -98248,7 +99101,7 @@ async function consumeChangeset(file, changeset, applied, journal) {
   const remaining = Object.entries(changeset.packages).filter(([name]) => void 0 !== applied && !applied.includes(name));
   await journal.remember(file);
   if (remaining.length) {
-    await writeFile10(file, formatChangeset({
+    await writeFile11(file, formatChangeset({
       packages: Object.fromEntries(remaining),
       summary: changeset.summary
     }));
@@ -98258,7 +99111,7 @@ async function consumeChangeset(file, changeset, applied, journal) {
 }
 
 // ../../js/wp-release/dist/file-journal.js
-import { readFile as readFile17, rm as rm11, writeFile as writeFile11 } from "node:fs/promises";
+import { readFile as readFile18, rm as rm11, writeFile as writeFile12 } from "node:fs/promises";
 var FileJournal = class {
   /** Original contents by file, undefined for files that didn't exist. */
   files = /* @__PURE__ */ new Map();
@@ -98273,7 +99126,7 @@ var FileJournal = class {
       return;
     }
     try {
-      this.files.set(file, await readFile17(file, "utf8"));
+      this.files.set(file, await readFile18(file, "utf8"));
     } catch (error) {
       if ("ENOENT" !== error.code) {
         throw error;
@@ -98296,7 +99149,7 @@ var FileJournal = class {
         if (void 0 === contents) {
           await rm11(file, { force: true });
         } else {
-          await writeFile11(file, contents);
+          await writeFile12(file, contents);
         }
       } catch (error) {
         errors.push(error instanceof Error ? error : new Error(String(error)));
