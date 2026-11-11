@@ -145,7 +145,7 @@ test(
 		} );
 		assert.equal( result.status, 0, result.stdout + result.stderr );
 		const cli = await execute(
-			'deploy-svn',
+			'deploy svn',
 			[
 				'--release-ref',
 				'refs/tags/alpha@1.2.0',
@@ -378,7 +378,7 @@ test(
 
 		await assert.rejects(
 			execute(
-				'deploy-svn',
+				'deploy svn',
 				[
 					...args,
 					'--source-dir',
@@ -395,7 +395,7 @@ test(
 			'A single-plugin command should run the supplied SVN runner.'
 		);
 		const configured = await execute(
-			'deploy-svn',
+			'deploy svn',
 			[ ...args, '--release-ref', 'refs/tags/alpha/1.2.0' ],
 			{ cwd, logger, svnRunner }
 		);

@@ -21,7 +21,7 @@ try {
 	}
 
 	const { result, exitCode } = await execute(
-		'deploy-svn',
+		'deploy svn',
 		getDeployArgs( input ),
 		{
 			cwd: input.cwd ?? process.cwd(),

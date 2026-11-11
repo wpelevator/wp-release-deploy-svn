@@ -90891,9 +90891,9 @@ function getStrings(values, name) {
 // ../../js/wp-release/dist/commands/i18n-compile.js
 function createI18nCompileCommand(format) {
   return {
-    name: `i18n-${format}`,
+    name: `i18n ${format}`,
     acceptsPositionals: true,
-    usage: `i18n-${format} <file.po> [options]`,
+    usage: `i18n ${format} <file.po> [options]`,
     summary: `Compile translated PO into ${"php" === format ? "WordPress .l10n.php" : format.toUpperCase()} files.`,
     help: `Options:
   --output <path>     Output file (${format === "json" ? "directory for JSON" : "defaults beside the PO"})
@@ -91115,7 +91115,7 @@ async function generatePackagePot(input) {
           file: outputPath,
           code: "stale-pot",
           severity: "error",
-          message: "POT is missing or stale; regenerate it with i18n-pot."
+          message: "POT is missing or stale; regenerate it with i18n pot."
         });
       }
     } catch (error) {
@@ -92966,9 +92966,9 @@ function report(context, diagnostics, sourceDir) {
 }
 function createI18nCommand(operation) {
   return {
-    name: `i18n-${operation}`,
+    name: `i18n ${operation}`,
     acceptsPositionals: true,
-    usage: `i18n-${operation} [<source-dir>] [options]`,
+    usage: `i18n ${operation} [<source-dir>] [options]`,
     summary: "pot" === operation ? "Extract WordPress source strings into a reproducible POT." : "Audit WordPress source strings without writing files.",
     help: `Options:
   --package <name>       Configured package (extraction overrides allowed)
@@ -96538,9 +96538,9 @@ function getDeployInputFromArgs(input) {
   };
 }
 var deploy_svn_default = {
-  name: "deploy-svn",
+  name: "deploy svn",
   acceptsPositionals: true,
-  usage: "deploy-svn [<source-dir>] [options] | deploy-svn --release-ref <ref> [--package <name>] [--list] [--dry-run]",
+  usage: "deploy svn [<source-dir>] [options] | deploy svn --release-ref <ref> [--package <name>] [--list] [--dry-run]",
   summary: "Deploy a plugin to the WordPress.org plugin SVN repository.",
   help: `Arguments:
   <source-dir>            Directory with the plugin files (default: .), also
@@ -96590,15 +96590,15 @@ the assetsDir of each deploy.svn target, while a pre-release only creates its
 tag. A failed deploy doesn't stop the others and exits with 1.
 
 Examples:
-  wp-release deploy-svn --release-ref "$GITHUB_REF"
+  wp-release deploy svn --release-ref "$GITHUB_REF"
       Deploy the configured plugin of a release tag push
-  wp-release deploy-svn dist --trunk --svn-tag 1.2.0 --assets-dir .wordpress-org
+  wp-release deploy svn dist --trunk --svn-tag 1.2.0 --assets-dir .wordpress-org
       Deploy 1.2.0 to trunk and the tag, and update the assets
-  wp-release deploy-svn dist --svn-tag 1.2.0-rc.1
+  wp-release deploy svn dist --svn-tag 1.2.0-rc.1
       Tag a pre-release build without touching trunk
-  wp-release deploy-svn dist --readme-only
+  wp-release deploy svn dist --readme-only
       Update only the readme
-  wp-release deploy-svn --assets-dir .wordpress-org
+  wp-release deploy svn --assets-dir .wordpress-org
       Update only the assets`,
   options: {
     ...sourceDirArgs,
@@ -97904,9 +97904,9 @@ function getGitDeployInputFromArgs(values, positionals, cwd) {
   };
 }
 var deploy_git_default = {
-  name: "deploy-git",
+  name: "deploy git",
   acceptsPositionals: true,
-  usage: "deploy-git [<source-dir>] --git-url <url> [options] | deploy-git --release-ref <ref> [--package <name>] [--list] [--dry-run]",
+  usage: "deploy git [<source-dir>] --git-url <url> [options] | deploy git --release-ref <ref> [--package <name>] [--list] [--dry-run]",
   summary: "Deploy the files of a plugin, theme or package to a Git repository as a release commit.",
   help: `Arguments:
   <source-dir>            Directory with the files to release (default: .),
@@ -97960,13 +97960,13 @@ each package, and a failed deploy doesn't stop the others but exits with 1. A re
 of its default branch, and a branch releases to the same branch.
 
 Examples:
-  wp-release deploy-git --release-ref "$GITHUB_REF"
+  wp-release deploy git --release-ref "$GITHUB_REF"
       Deploy the configured packages of a tag or branch push
-  wp-release deploy-git --release-ref refs/heads/main --list
+  wp-release deploy git --release-ref refs/heads/main --list
       Preview what a push to main deploys
-  wp-release deploy-git build --git-url git@github.com:me/my-plugin-dist.git --branch main --tag 1.2.0
+  wp-release deploy git build --git-url git@github.com:me/my-plugin-dist.git --branch main --tag 1.2.0
       Release a build to a distribution repository and tag it
-  wp-release deploy-git packages/my-plugin --split-prefix packages/my-plugin --git-url \u2026 --branch main
+  wp-release deploy git packages/my-plugin --split-prefix packages/my-plugin --git-url \u2026 --branch main
       Release a monorepo package with its own history`,
   options: {
     ...sourceDirArgs,
@@ -99844,8 +99844,8 @@ async function getChangeset(release, input, terminal) {
   return changeset;
 }
 var changeset_add_default = {
-  name: "changeset-add",
-  usage: "changeset-add [--empty | --package <name> --bump <bump> ... | --bump <bump>] [options]",
+  name: "changeset add",
+  usage: "changeset add [--empty | --package <name> --bump <bump> ... | --bump <bump>] [options]",
   summary: "Add a package release note for the next release PR.",
   help: `Options:
   --package <name>       Package identifier, or its path under the configured
@@ -99898,8 +99898,8 @@ bumps and the release note.${changesetProjectHelp}`,
 
 // ../../js/wp-release/dist/commands/changeset-status.js
 var changeset_status_default = {
-  name: "changeset-status",
-  usage: "changeset-status [--since <ref>]",
+  name: "changeset status",
+  usage: "changeset status [--since <ref>]",
   summary: "Show pending releases and check changed packages for changesets.",
   help: `Options:
   --since <ref>          Compare changed files with this git ref (for CI)
@@ -99966,8 +99966,8 @@ An empty changeset added since the comparison base counts as an explicit no-rele
 
 // ../../js/wp-release/dist/commands/changeset-version.js
 var changeset_version_default = {
-  name: "changeset-version",
-  usage: "changeset-version [--dry-run] [--date <YYYY-MM-DD>] [--package <name>] [--no-dependents] [--prerelease <id> | --snapshot <id>]",
+  name: "changeset version",
+  usage: "changeset version [--dry-run] [--date <YYYY-MM-DD>] [--package <name>] [--no-dependents] [--prerelease <id> | --snapshot <id>]",
   summary: "Apply pending version bumps and changelog entries.",
   help: `Options:
   --dry-run              Print the release plan without writing files
@@ -100025,8 +100025,8 @@ them, for example to test a pull request.${changesetProjectHelp}`,
 
 // ../../js/wp-release/dist/commands/changeset-tag.js
 var changeset_tag_default = {
-  name: "changeset-tag",
-  usage: "changeset-tag [--dry-run] [--untagged] [--since <ref>] [--package <name>] [--version <version>] [--push]",
+  name: "changeset tag",
+  usage: "changeset tag [--dry-run] [--untagged] [--since <ref>] [--package <name>] [--version <version>] [--push]",
   summary: "Create missing release tags for configured package versions.",
   help: `Options:
   --dry-run              List missing tags and their release notes without
@@ -100121,13 +100121,20 @@ function getConfigArgs(values) {
     ...tagFormat ? { tagFormat } : {}
   };
 }
+function getGroup(command) {
+  const [group, subcommand] = command.name.split(" ");
+  return subcommand ? group : void 0;
+}
+function findByName(name) {
+  return commands.find((command) => command.name === name || getGroup(command) && command.name.replace(" ", "-") === name);
+}
 function rejectPositionals(command, positionals) {
   if (!command.acceptsPositionals && positionals.length) {
-    throw new ValidationError(`wp-release ${command.name} does not accept positional arguments, like "${positionals[0]}"; pass a named option instead, or ${command.name} --help for the usage.`);
+    throw new ValidationError(`wp-release ${command.name} does not accept positional arguments, like "${positionals[0]}"; pass a named option instead, or wp-release ${command.name} --help for the usage.`);
   }
 }
 async function execute(name, args, context) {
-  const command = commands.find(({ name: commandName }) => name === commandName);
+  const command = findByName(name);
   if (!command) {
     throw new Error(`Unknown command "${name}".`);
   }
@@ -100294,7 +100301,7 @@ try {
     process.env.SVN_PASSWORD = input.svnPassword;
   }
   const { result, exitCode } = await execute(
-    "deploy-svn",
+    "deploy svn",
     getDeployArgs(input),
     {
       cwd: input.cwd ?? process.cwd(),

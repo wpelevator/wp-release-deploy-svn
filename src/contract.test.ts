@@ -42,7 +42,7 @@ function getActionDefaults(): Record< string, string > {
 }
 
 function resolveCli( args: string[], cwd: string ) {
-	const command = commands.find( ( { name } ) => 'deploy-svn' === name );
+	const command = commands.find( ( { name } ) => 'deploy svn' === name );
 	const { values, positionals } = parseArgs( {
 		args,
 		options: command?.options,
