@@ -59,7 +59,7 @@ export function getDeployInput(): DeployInput {
  * The repository slug and default readme belong only to single-plugin mode.
  *
  * @param input Single-plugin options and credentials.
- * @return Arguments after deploy-svn.
+ * @return Arguments after deploy svn.
  */
 export function getDeployArgs(
 	input: DeployInput = getDeployInput()
