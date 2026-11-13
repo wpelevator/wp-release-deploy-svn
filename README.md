@@ -2,9 +2,9 @@
 
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-WP%20Release%20Deploy%20SVN-blue?logo=github)](https://github.com/marketplace/actions/wp-release-deploy-svn) [![Latest release](https://img.shields.io/github/v/release/wpelevator/wp-release-deploy-svn?include_prereleases&sort=semver)](https://github.com/wpelevator/wp-release-deploy-svn/releases) [![npm](https://img.shields.io/npm/v/@wpelevator/wp-release?label=wp-release)](https://www.npmjs.com/package/@wpelevator/wp-release)
 
-GitHub Action that deploys a WordPress plugin to the WordPress.org plugin SVN repository using [`@wpelevator/wp-release`](https://www.npmjs.com/package/@wpelevator/wp-release). It's named after the [`wp-release deploy svn`](https://www.npmjs.com/package/@wpelevator/wp-release#deploy-to-svn) command that it runs.
+GitHub Action that deploys a WordPress plugin to the WordPress.org plugin SVN repository using [`@wpelevator/wp-release`](https://www.npmjs.com/package/@wpelevator/wp-release). It's named after the [`wp-release deploy svn`](https://wpelevator.github.io/docs/js/wp-release/latest/deploy-svn.html) command that it runs.
 
-Input names follow the CLI flags of [`wp-release deploy svn`](https://www.npmjs.com/package/@wpelevator/wp-release#deploy-to-svn), and the `SVN_USERNAME`/`SVN_PASSWORD` secrets match the 10up WordPress.org actions. See [Compared with the 10up actions](#compared-with-the-10up-actions) for the differences and how to migrate.
+Input names follow the CLI flags of [`wp-release deploy svn`](https://wpelevator.github.io/docs/js/wp-release/latest/deploy-svn.html), and the `SVN_USERNAME`/`SVN_PASSWORD` secrets match the 10up WordPress.org actions. See [Compared with the 10up actions](#compared-with-the-10up-actions) for the differences and how to migrate.
 
 It's built on current GitHub Actions features, so problems show up where you look for them instead of only in the log: a version mismatch is an [annotation](#annotations-and-job-summary) on the exact file and line, and every deploy writes a job summary with the version, the commit and the SVN changes.
 
@@ -181,7 +181,7 @@ npm install --save-dev @wpelevator/wp-release
 npx wp-release deploy svn dist --trunk --svn-tag 1.2.0 --assets-dir .wordpress-org --dry-run
 ```
 
-Remove `--dry-run` to commit. The inputs map to the flags of [`wp-release deploy svn`](https://www.npmjs.com/package/@wpelevator/wp-release#deploy-to-svn): `source-dir` is the first argument, `trunk`, `readme-only`, `force` and `dry-run` are switches, and `slug`, `version`, `svn-tag`, `assets-dir`, `readme`, `from-zip`, `distignore`, `exclude`, `exclude-gitattributes`, `svn-url`, `svn-username` and `message` keep their names. `assets: false` is `--no-assets` and `distignore: false` is `--no-distignore`. Add `--json` to read the result from the output. The CLI needs Node.js 22.12 or later. Run `npx wp-release deploy svn --help` for all options.
+Remove `--dry-run` to commit. The inputs map to the flags of [`wp-release deploy svn`](https://wpelevator.github.io/docs/js/wp-release/latest/deploy-svn.html): `source-dir` is the first argument, `trunk`, `readme-only`, `force` and `dry-run` are switches, and `slug`, `version`, `svn-tag`, `assets-dir`, `readme`, `from-zip`, `distignore`, `exclude`, `exclude-gitattributes`, `svn-url`, `svn-username` and `message` keep their names. `assets: false` is `--no-assets` and `distignore: false` is `--no-distignore`. Add `--json` to read the result from the output. The CLI needs Node.js 22.12 or later. Run `npx wp-release deploy svn --help` for all options.
 
 ## How it works
 
