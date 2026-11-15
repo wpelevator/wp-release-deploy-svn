@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.11 (2026-11-15)
+
+- Link the README to the reorganized wp-release docs pages. ([`4e6600f`](https://github.com/wpelevator/basement/commit/4e6600f4fddd75706f3b0c33d328d51e26d5ffd9))
+- Bundle wp-release 0.21.1.
+
 ## 0.7.10 (2026-11-11)
 
 - Group the wp-release commands as `changeset add|status|version|tag`, `deploy svn|git` and `i18n pot|audit|mo|json|php`, and run `changeset add` for a bare `wp-release changeset`, so that a `"changeset": "wp-release changeset"` script runs `npm run changeset`. The dashed names like `changeset-add` keep working as aliases, and `execute()` and `CommandResults` use the grouped names. ([`0bb0b18`](https://github.com/wpelevator/basement/commit/0bb0b187cc93d3dd1ea9378764e00ef0a7a32f87))
