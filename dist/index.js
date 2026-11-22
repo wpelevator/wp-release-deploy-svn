@@ -85089,60 +85089,13 @@ var require_yauzl = __commonJS({
   }
 });
 
-// ../../js/wp-release/node_modules/semver/internal/lrucache.js
-var require_lrucache = __commonJS({
-  "../../js/wp-release/node_modules/semver/internal/lrucache.js"(exports, module) {
+// ../../js/wp-release/node_modules/semver/internal/debug.js
+var require_debug = __commonJS({
+  "../../js/wp-release/node_modules/semver/internal/debug.js"(exports, module) {
     "use strict";
-    var LRUCache = class {
-      constructor() {
-        this.max = 1e3;
-        this.map = /* @__PURE__ */ new Map();
-      }
-      get(key) {
-        const value = this.map.get(key);
-        if (value === void 0) {
-          return void 0;
-        } else {
-          this.map.delete(key);
-          this.map.set(key, value);
-          return value;
-        }
-      }
-      delete(key) {
-        return this.map.delete(key);
-      }
-      set(key, value) {
-        const deleted = this.delete(key);
-        if (!deleted && value !== void 0) {
-          if (this.map.size >= this.max) {
-            const firstKey = this.map.keys().next().value;
-            this.delete(firstKey);
-          }
-          this.map.set(key, value);
-        }
-        return this;
-      }
+    var debug2 = typeof process === "object" && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? (...args) => console.error("SEMVER", ...args) : () => {
     };
-    module.exports = LRUCache;
-  }
-});
-
-// ../../js/wp-release/node_modules/semver/internal/parse-options.js
-var require_parse_options = __commonJS({
-  "../../js/wp-release/node_modules/semver/internal/parse-options.js"(exports, module) {
-    "use strict";
-    var looseOption = Object.freeze({ loose: true });
-    var emptyOpts = Object.freeze({});
-    var parseOptions = (options2) => {
-      if (!options2) {
-        return emptyOpts;
-      }
-      if (typeof options2 !== "object") {
-        return looseOption;
-      }
-      return options2;
-    };
-    module.exports = parseOptions;
+    module.exports = debug2;
   }
 });
 
@@ -85175,16 +85128,6 @@ var require_constants7 = __commonJS({
       FLAG_INCLUDE_PRERELEASE: 1,
       FLAG_LOOSE: 2
     };
-  }
-});
-
-// ../../js/wp-release/node_modules/semver/internal/debug.js
-var require_debug = __commonJS({
-  "../../js/wp-release/node_modules/semver/internal/debug.js"(exports, module) {
-    "use strict";
-    var debug2 = typeof process === "object" && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? (...args) => console.error("SEMVER", ...args) : () => {
-    };
-    module.exports = debug2;
   }
 });
 
@@ -85273,6 +85216,25 @@ var require_re = __commonJS({
     createToken("STAR", "(<|>)?=?\\s*\\*");
     createToken("GTE0", "^\\s*>=\\s*0\\.0\\.0\\s*$");
     createToken("GTE0PRE", "^\\s*>=\\s*0\\.0\\.0-0\\s*$");
+  }
+});
+
+// ../../js/wp-release/node_modules/semver/internal/parse-options.js
+var require_parse_options = __commonJS({
+  "../../js/wp-release/node_modules/semver/internal/parse-options.js"(exports, module) {
+    "use strict";
+    var looseOption = Object.freeze({ loose: true });
+    var emptyOpts = Object.freeze({});
+    var parseOptions = (options2) => {
+      if (!options2) {
+        return emptyOpts;
+      }
+      if (typeof options2 !== "object") {
+        return looseOption;
+      }
+      return options2;
+    };
+    module.exports = parseOptions;
   }
 });
 
@@ -85603,6 +85565,54 @@ var require_compare = __commonJS({
   }
 });
 
+// ../../js/wp-release/node_modules/semver/functions/gt.js
+var require_gt = __commonJS({
+  "../../js/wp-release/node_modules/semver/functions/gt.js"(exports, module) {
+    "use strict";
+    var compare = require_compare();
+    var gt = (a, b, loose) => compare(a, b, loose) > 0;
+    module.exports = gt;
+  }
+});
+
+// ../../js/wp-release/node_modules/semver/internal/lrucache.js
+var require_lrucache = __commonJS({
+  "../../js/wp-release/node_modules/semver/internal/lrucache.js"(exports, module) {
+    "use strict";
+    var LRUCache = class {
+      constructor() {
+        this.max = 1e3;
+        this.map = /* @__PURE__ */ new Map();
+      }
+      get(key) {
+        const value = this.map.get(key);
+        if (value === void 0) {
+          return void 0;
+        } else {
+          this.map.delete(key);
+          this.map.set(key, value);
+          return value;
+        }
+      }
+      delete(key) {
+        return this.map.delete(key);
+      }
+      set(key, value) {
+        const deleted = this.delete(key);
+        if (!deleted && value !== void 0) {
+          if (this.map.size >= this.max) {
+            const firstKey = this.map.keys().next().value;
+            this.delete(firstKey);
+          }
+          this.map.set(key, value);
+        }
+        return this;
+      }
+    };
+    module.exports = LRUCache;
+  }
+});
+
 // ../../js/wp-release/node_modules/semver/functions/eq.js
 var require_eq = __commonJS({
   "../../js/wp-release/node_modules/semver/functions/eq.js"(exports, module) {
@@ -85620,16 +85630,6 @@ var require_neq = __commonJS({
     var compare = require_compare();
     var neq = (a, b, loose) => compare(a, b, loose) !== 0;
     module.exports = neq;
-  }
-});
-
-// ../../js/wp-release/node_modules/semver/functions/gt.js
-var require_gt = __commonJS({
-  "../../js/wp-release/node_modules/semver/functions/gt.js"(exports, module) {
-    "use strict";
-    var compare = require_compare();
-    var gt = (a, b, loose) => compare(a, b, loose) > 0;
-    module.exports = gt;
   }
 });
 
@@ -91840,6 +91840,9 @@ function validateChangesetConfig(config, configFile) {
   }
   if (void 0 !== dependentsOptions?.exclude && (!Array.isArray(dependentsOptions.exclude) || !dependentsOptions.exclude.length || dependentsOptions.exclude.some((item) => "string" !== typeof item || !item.trim()))) {
     throw new ValidationError(`wp-release config ${configFile}.dependents.exclude must be an array of non-empty strings.`);
+  }
+  if (void 0 !== dependentsOptions?.follow && (!Array.isArray(dependentsOptions.follow) || !dependentsOptions.follow.length || dependentsOptions.follow.some((item) => "string" !== typeof item || !item.trim()))) {
+    throw new ValidationError(`wp-release config ${configFile}.dependents.follow must be an array of non-empty strings.`);
   }
   if (void 0 !== dependentsOptions?.when && !["out-of-range", "always"].includes(dependentsOptions.when)) {
     throw new ValidationError(`wp-release config ${configFile}.dependents.when must be out-of-range or always.`);
@@ -98736,6 +98739,7 @@ function insertAfterMarker(contents, marker, section, file) {
 }
 
 // ../../js/wp-release/dist/changeset-dependents.js
+var import_gt = __toESM(require_gt(), 1);
 var import_satisfies = __toESM(require_satisfies(), 1);
 var import_valid = __toESM(require_valid(), 1);
 import { readFile as readFile16, writeFile as writeFile10 } from "node:fs/promises";
@@ -98757,6 +98761,27 @@ async function applyDependents(releases, packages, config) {
         }
       }
     }
+  }
+  followSources(releases, rule);
+}
+function followSources(releases, rule) {
+  for (const release of releases) {
+    const sources = releases.filter((item) => (release.sources ?? []).includes(item.package.name));
+    if (!sources.length || !isFollowedDependent(release.package, rule)) {
+      continue;
+    }
+    const versions = [
+      ...new Set(sources.map((s) => s.nextVersion))
+    ];
+    const name = release.package.name;
+    if (versions.length > 1) {
+      throw new ValidationError(`Cannot release "${name}" with the version of its sources, which release ${versions.join(" and ")}.`);
+    }
+    if (!(0, import_gt.default)(versions[0], release.currentVersion)) {
+      throw new ValidationError(`Cannot release "${name}" with the version ${versions[0]} of its source, which isn't above its current version ${release.currentVersion}; release the source with a larger bump.`);
+    }
+    release.nextVersion = versions[0];
+    release.bump = sources[0].bump;
   }
 }
 async function deriveDependentRelease(source, dependent, releases, rule) {
@@ -99042,6 +99067,9 @@ function effectiveRange(spec, currentVersion) {
     return `${bare}${currentVersion}`;
   }
   return bare;
+}
+function isFollowedDependent(dependent, rule) {
+  return (rule.follow ?? []).some((pattern) => pattern === dependent.name || globRegExp(pattern).test(dependent.path));
 }
 function isExcludedDependent(dependent, rule) {
   return (rule.exclude ?? []).some((pattern) => pattern === dependent.name || globRegExp(pattern).test(dependent.path));
